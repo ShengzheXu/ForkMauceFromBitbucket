@@ -1,0 +1,169 @@
+{
+    "folder": "./results",
+    "experiments": [
+            {
+                "name": "nodes",
+                "global_parameters" : [{
+                    "experiments": 100,
+                    "timesteps": 10000,
+                    "nodes": 11
+                }],
+                "algorithms": [
+                    {
+                        "name": "rnd",
+                        "configs": [{
+                            "priority": 0,
+                            "parameters": {}
+                        }]
+                    },
+                    {
+                        "name": "llr",
+                        "configs": [{
+                            "priority": 0,
+                            "parameters": {}
+                        }]
+                    },
+                    {
+                        "name": "mauce",
+                        "configs": [{
+                            "priority": 0,
+                            "parameters": {}
+                        }]
+                    },
+                    {
+                        "name": "scql",
+                        "configs": [{
+                            "priority": 0,
+                            "parameters": {}
+                        }]
+                    }
+                ]
+            },
+            {
+                "name": "mines",
+                "global_parameters" : [{
+                    "timesteps": 40000,
+                    "experiments": 100
+                }],
+                "algorithms" : [
+                    {
+                        "name": "rnd",
+                        "configs": [
+                            {
+                                "priority": 0,
+                                "parameters": {
+                                    "seed": [1, 2, 3, 1000, 10000]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "mauce",
+                        "configs": [
+                            {
+                                "priority": 1,
+                                "parameters": {
+                                    "seed": [1, 2, 3]
+                                }
+                            },
+                            {
+                                "priority": 2,
+                                "parameters": {
+                                    "seed": 1000
+                                }
+                            },
+                            {
+                                "priority": 3,
+                                "parameters": {
+                                    "seed": 10000
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "llr",
+                        "configs": [
+                            {
+                                "priority": 1,
+                                "parameters": {
+                                    "seed": [1,2,3]
+                                }
+                            },
+                            {
+                                "priority": 2,
+                                "parameters": {
+                                    "seed": [1000, 10000]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "scql",
+                        "configs": [
+                            {
+                                "priority": 1,
+                                "parameters": {
+                                    "seed": [1,2,3]
+                                }
+                            },
+                            {
+                                "priority": 2,
+                                "parameters": {
+                                    "seed": [1000, 10000]
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "wind",
+                "global_parameters" : [{
+                    "timesteps": 40000,
+                    "experiments": 10
+                }],
+                "algorithms" : [
+                    {
+                        "name": "rnd",
+                        "command": "../sim/run_in_venv.sh",
+                        "configs": [
+                            {
+                                "priority": 0,
+                                "parameters": { "seed": 1 }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "llr",
+                        "command": "../sim/run_in_venv.sh",
+                        "configs": [
+                            {
+                                "priority": 0,
+                                "parameters": {}
+                            }
+                        ]
+                    },
+                    {
+                        "name": "scql",
+                        "command": "../sim/run_in_venv.sh",
+                        "configs": [
+                            {
+                                "priority": 0,
+                                "parameters": {}
+                            }
+                        ]
+                    },
+                    {
+                        "name": "mauce",
+                        "command": "../sim/run_in_venv.sh",
+                        "configs": [
+                            {
+                                "priority": 0,
+                                "parameters": {}
+                            }
+                        ]
+                    }
+                ]
+            }
+    ]
+}

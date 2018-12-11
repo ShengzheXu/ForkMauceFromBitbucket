@@ -1,0 +1,1956 @@
+@PREAMBLE{ "\providecommand{\noopsort}[1]{}" }
+
+
+
+
+@string{ NIPS = {Advances in Neural Information Processing Systems}}
+@string{ NIPS6 = NIPS # {~6}} % 1993
+@string{ NIPS8 = NIPS # {~8}}
+@string{ NIPS9 = NIPS # {~9}}
+@string{ NIPS10 = NIPS # {~10}}
+@string{ NIPS11 = NIPS # {~11}} %1998 - published 1999
+@string{ NIPS12 = NIPS # {~12}}
+@string{ NIPS13 = NIPS # {~13}} %NIPS 2000, pub 2001
+@string{ NIPS14 = NIPS # {~14}}  % NIPS 14 = year 2001 -> published 2002
+@string{ NIPS15 = NIPS # {~15}}
+@string{ NIPS16 = NIPS # {~16}}         16        2003              2004
+@string{ NIPS17 = NIPS # {~17}}
+@string{ NIPS18 = NIPS # {~18}}
+@string{ NIPS19 = NIPS # {~19}}
+@string{ NIPS20 = NIPS # {~20}} % NIPS 20, year 2007, published 2008
+@string{ NIPS21 = NIPS # {~21}} % NIPS 21, year 2008, published 2009
+@string{ NIPS22 = NIPS # {~22}} 
+@string{ NIPS23 = NIPS # {~23}} % NIPS 23, year 2010, published 2011(?)
+
+@string{ IJCAI = {Proc.\ of the International Joint Conference on Artificial Intelligence}}
+@string{ AAMAS = {Proc.\ of the International Joint Conference on Autonomous Agents and Multi Agent Systems}}
+@string{ AAAI =  {Proc.\ of the National Conference on Artificial Intelligence}}
+@string{ IROS =  {Proc.\ of the International Conference on Intelligent Robots and Systems}}
+@string{ UAI  =  {Proc.\ of Uncertainty in Artificial Intelligence}}
+@string{ ICRA =  {Proc.\ of the IEEE International Conference on Robotics and Automation}}
+@string{ ICML =  {Proc.\ of the International Conference on Machine Learning}}
+@string{ ECML =  {{\bf CHECK ECML citation!, see e.g. Jung09ECML } Proc.\ of the European Conference on Machine Learning}}
+@string{ ECMLPKDD =  {Machine Learning and Knowledge Discovery in Databases}}
+@string{ GECCO = {Proc.\ of the Genetic and Evolutionary Computation Conference}}
+@string{ IAS  =  {Proc.\ of the International Conference on Intelligent Autonomous Systems}}
+@string{ ICMLA = {Proc.\ of the International Conference on Machine Learning and Applications}}
+@string{ ICAA =  {Proc.\ of the International Conference on Autonomous Agents}}
+@string{ ICAPS = {Proc.\ of the International Conference on Automated Planning and Scheduling}}
+@string{ ICAIPS ={Proc.\ of the International Conference on Artificial Intelligence Planning Systems}}
+@string{ ICMAS = {Proc.\ of the International Conference on Multiagent Systems}}
+@string{ BNAIC = {Proc.\ of the Belgian-Dutch Conference on Machine Learning}} 
+@string{ CVPR =  {Proc.\ of the IEEE Conference on Computer Vision and Pattern Recognition}}
+
+@string{ MSDM =  {Proc.\ of the AAMAS Workshop on Multi-Agent Sequential Decision Making in Uncertain Domains (MSDM)}}
+
+@string{ ML =       {Machine Learning}}
+@string{ JMLR =     {Journal of Machine Learning Research}}
+@string{ JAIR =     {Journal of Artificial Intelligence Research}}
+@string{ AI =       {Artificial Intelligence}}
+@string{ JAAMAS =   {Autonomous Agents and Multi-Agent Systems}}
+
+@string{ OR =       {Operations Research}}
+@string{ MS =       {Management Science}}
+@string{ ROAS =     {Robotics and Autonomous Systems}}
+@string{ IEEETRA =  {IEEE Transactions on Robotics and Automation}}
+@string{ IEEETAC =  {IEEE Transactions on Automatic Control}}
+
+
+
+@string{ AS  = {Athena Scientific}}
+@string{ ASa = {Belmont, MA}}
+@string{ PUP = {Princeton University Press}}
+@string{ SV  = {Springer-Verlag}}
+@string{ MIT = {MIT Press}}
+@string{ AW  = {Addison-Wesley}}
+@string{ ACM = {ACM Press}}
+@string{ MK  = {Morgan Kaufmann}}
+@string{ PH  = {Prentice Hall}}
+@string{ CUP = {Cambridge University Press}}
+@string{ IEEE= {IEEE Computer Society}}
+@string{ AAAIp= {AAAI Press}}
+@string{ IFAAMAS={International Foundation for Autonomous Agents and Multiagent Systems}}
+
+@string{ijcai11 = "Proceedings of the Twenty-Third International Joint Conference on Artificial Intelligence"}
+@string{ijcai09 = "Proceedings of the Twenty-Second International Joint Conference on Artificial Intelligence"}
+@string{ijcai07 = "Proceedings of the Twenty-First International Joint Conference on Artificial Intelligence"}
+@string{ijcai07 = "Proceedings of the Twentieth International Joint Conference on Artificial Intelligence"}
+@string{ijcai05 = "Proceedings of the Nineteenth International Joint Conference on Artificial Intelligence"}
+@string{ijcai03 = "Proceedings of the Eighteenth International Joint Conference on Artificial Intelligence"}
+@string{ijcai01 = "Proceedings of the Seventeenth International Joint Conference on Artificial Intelligence"}
+@string{ijcai99 = "Proceedings of the Sixteenth International Joint Conference on Artificial Intelligence"}
+@string{ijcai97 = "Proceedings of the Fifteenth International Joint Conference on Artificial Intelligence"}
+@string{ijcai95 = "Proceedings of the Fourteenth International Joint Conference on Artificial Intelligence"}
+@string{ijcai93 = "Proceedings of the Thirteenth International Joint Conference on Artificial Intelligence"}
+@string{ijcai91 = "Proceedings of the Twelfth International Joint Conference on Artificial Intelligence"}
+@string{ijcai89 = "Proceedings of the Eleventh International Joint Conference on Artificial Intelligence"}
+
+@string{icaps12="Proceedings of the Twenty-Second International Conference on Automated Planning and Scheduling"}
+@string{icaps11="Proceedings of the Twenty-First International Conference on Automated Planning and Scheduling"}
+@string{icaps10="Proceedings of the Twentieth International Conference on Automated Planning and Scheduling"}
+@string{icaps09="Proceedings of the Nineteenth International Conference on Automated Planning and Scheduling"}
+@string{icaps08="Proceedings of the Eighteenth International Conference on Automated Planning and Scheduling"}
+@string{icaps07="Proceedings of the Seventeenth International Conference on Automated Planning and Scheduling"}
+@string{icaps06="Proceedings of the Sixteenth International Conference on Automated Planning and Scheduling"}
+@string{icaps05="Proceedings of the Fifteenth International Conference on Automated Planning and Scheduling"}
+@string{icaps04="Proceedings of the Fourteenth International Conference on Automated Planning and Scheduling"}
+@string{icaps03="Proceedings of the Thirteenth International Conference on Automated Planning and Scheduling"}
+
+@string{aaai12 = "Proceedings of the Twenty-Sixth  National Conference on Artificial Intelligence"}
+@string{aaai11 = "Proceedings of the Twenty-Fifth  National Conference on Artificial Intelligence"}
+@string{aaai10 = "Proceedings of the Twenty-Fourth  National Conference on Artificial Intelligence"}
+@string{aaai09 = "DOES NOT EXIST"}
+@string{aaai08 = "Proceedings of the Twenty-Third  National Conference on Artificial Intelligence"}
+@string{aaai07 = "Proceedings of the Twenty-Second  National Conference on Artificial Intelligence"}
+@string{aaai06 = "Proceedings of the Twenty-First National Conference on Artificial Intelligence"}
+@string{aaai05 = "AAAI 2005: Proceedings of the Twentieth National Conference on Artificial Intelligence"}
+@string{aaai04 = "Proceedings of the Nineteenth National Conference on Artificial Intelligence"}
+@string{aaai02 = "Proceedings of the Eighteenth National Conference on Artificial Intelligence"}
+@string{aaai00 = "Proceedings of the Seventeenth National Conference on Artificial Intelligence"}
+@string{aaai99 = "Proceedings of the Sixteenth National Conference on Artificial Intelligence"}
+@string{aaai98 = "Proceedings of the Fifteenth National Conference on Artificial Intelligence"}
+@string{aaai97 = "Proceedings of the Fourteenth National Conference on Artificial Intelligence"}
+@string{aaai96 = "Proceedings of the Thirteenth National Conference on Artificial Intelligence"}
+@string{aaai94 = "Proceedings of the Twelfth National Conference on Artificial Intelligence"}
+@string{aaai93 = "Proceedings of the Eleventh National Conference on Artificial Intelligence"}
+@string{aaai92 = "Proceedings of the Tenth National Conference on Artificial Intelligence"}
+@string{aaai91 = "Proceedings of the Ninth National Conference on Artificial Intelligence"}
+@string{aaai90 = "Proceedings of the Eighth National Conference on Artificial Intelligence"}
+
+@string{colt01 = "Proceedings of the Fourteenth Annual Conference on Computational Learning Theory"}
+@string{colt00 = "Proceedings of the Thirteenth Annual Conference on Computational Learning Theory"}
+@string{colt99 = "Proceedings of the Twelfth Annual Conference on Computational Learning Theory"}
+@string{ml02 = "Proceedings of the Nineteenth International Conference on Machine Learning"}
+@string{ml01 = "Proceedings of the Eighteenth International Conference on Machine Learning"}
+@string{ml00 = "Proceedings of the Seventeenth International Conference on Machine Learning"}
+@string{ml99 = "Proceedings of the Sixteenth International Conference on Machine Learning"}
+@string{ml98 = "Proceedings of the Fifteenth International Conference on Machine Learning"}
+@string{ml97 = "Proceedings of the Fourteenth International Conference on Machine Learning"}
+@string{ml96 = "Proceedings of the Thirteenth International Conference on Machine Learning"}
+@string{ml95 = "Proceedings of the Twelfth International Conference on Machine Learning"}
+@string{ml94 = "Proceedings of the Eleventh International Conference on Machine Learning"}
+@string{ml93 = "Proceedings of the Tenth International Conference on Machine Learning"}
+@string{ml92 = "Proceedings of the Ninth International Conference on Machine Learning"}
+@string{ml91 = "Proceedings of the Eighth International Conference on Machine Learning"}
+@string{ml90 = "Proceedings of the Seventh International Conference on Machine Learning"}
+
+@string{uai12 = "Proceedings of the Twenty-Eighth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai11 = "Proceedings of the Twenty-Seventh Conference on Uncertainty in Artificial Intelligence"}
+@string{uai10 = "Proceedings of the Twenty-Sixth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai09 = "Proceedings of the Twenty-Fifth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai08 = "Proceedings of the Twenty-Fourth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai07 = "Proceedings of the Twenty-Third Conference on Uncertainty in Artificial Intelligence"}
+@string{uai06 = "Proceedings of the Twenty-Second Conference on Uncertainty in Artificial Intelligence"}
+@string{uai05 = "Proceedings of the Twenty-First Conference on Uncertainty in Artificial Intelligence"}
+@string{uai04 = "Proceedings of the Twentieth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai03 = "Proceedings of the Nineteenth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai02 = "Proceedings of the Eighteenth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai01 = "Proceedings of the Seventeenth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai00 = "Proceedings of the Sixteenth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai99 = "Proceedings of the Fifteenth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai98 = "Proceedings of the Fourteenth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai97 = "Proceedings of the Thirteenth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai96 = "Proceedings of the Twelfth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai95 = "Proceedings of the Eleventh Conference on Uncertainty in Artificial Intelligence"}
+@string{uai94 = "Proceedings of the Tenth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai93 = "Proceedings of the Ninth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai92 = "Proceedings of the Eighth Conference on Uncertainty in Artificial Intelligence"}
+@string{uai91 = "Proceedings of the Seventh Conference on Uncertainty in Artificial Intelligence"}
+
+
+@string{aamas12 = "Proceedings of the Eleventh International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas11 = "Proceedings of the Tenth International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas10 = "Proceedings of the Ninth International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas09 = "Proceedings of the Eighth International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas08 = "Proceedings of the Seventh International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas07 = "Proceedings of the Sixth International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas06 = "Proceedings of the Fifth International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas05 = "Proceedings of the Fourth International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas04 = "Proceedings of the Third International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas03 = "Proceedings of the Second International Joint Conference on Autonomous Agents and Multiagent Systems"}
+@string{aamas02 = "Proceedings of the First International Joint Conference on Autonomous Agents and Multiagent Systems"}
+
+@string{jaamas = "Journal of Autonomous Agents and Multi-Agent Systems"},
+@string{nips = "Advances in Neural Information Processing Systems"},
+@string{ijcnn = "International Joint Conference on Neural Network"},
+@string{aij = "Artificial Intelligence"},
+@string{jair = "Journal of AI Research"},
+@string{mlj = "Machine Learning"},
+@string{nc = "Neural Computation"},
+@string{nn = "Neural Networks"},
+@string{or = "Operations Research"},
+@string{siam-r = "SIAM Reviews"},
+@string{SIAM-J-Num-Anal = "SIAM Journal on Numerical Analysis"},
+@string{jima = "Journal of the Institute of Mathematics and Applications"},
+@string{SIAM_J_Comp = "SIAM Journal on Computing"},
+@string{cacm = "Communications of the ACM"},
+@string{ic = "Information and Computation"},
+
+@book{Pearl88,
+    author =    {Pearl, Judea},
+    title =     {Probabilistic Reasoning In Intelligent Systems: Networks of Plausible Inference},
+    year =      {1988}
+}
+%[ckju6yjrD]
+
+@book{Bishop, 
+	author={Christopher M. Bishop},
+	title={Pattern Recognition and Machine Learning},
+	year={2006} 
+}%The most standard handbook on machine learning and related topics
+%Used for Software technology and education seminar fall 2009
+%Used for Capita Selecta: EMM fall 2009
+%Used for Pattern Recognition seminar fall 2009
+%Contains max-plus / max-sum which is necessary for factorized single shot cooperative games %(FSSCGs). 
+
+@INPROCEEDINGS{VlassisMP,
+	author={Vlassis, N. and Elhorst, R. and Kok, J.R.},
+	booktitle={IEEE SMC 2004: Proceedings of the 2004 IEEE International Conference on Systems, Man and Cybernetics},
+	title={Anytime algorithms for multiagent decision making using coordination graphs},
+	year={2004},
+	volume={1},
+	pages={953--957}
+}
+
+@incollection {KokVlassisRobo,
+   author = {Kok, Jelle and Vlassis, Nikos},
+   affiliation = {Informatics Institute, University of Amsterdam, The Netherlands},
+   title = {Using the Max-Plus Algorithm for Multiagent Decision Making in Coordination Graphs},
+   booktitle = {RoboCup 2005: Robot Soccer World Cup IX},
+   series = {Lecture Notes in Computer Science},
+   editor = {Bredenfeld, Ansgar and Jacoff, Adam and Noda, Itsuki and Takahashi, Yasutake},
+   isbn = {978-3-540-35437-6},
+   keyword = {Computer Science},
+   pages = {1-12},
+   volume = {4020},
+   year = {2006}
+}
+
+@inproceedings{SparseCoopQ,
+ author = {Kok, Jelle R. and Vlassis, Nikos},
+ title = {Sparse cooperative {Q}-learning},
+ booktitle = {ICML 2004: Proceedings of the twenty-first international conference on Machine learning},
+ year = {2004},
+ pages = {61--68}
+}
+
+@inproceedings{BarrettCH,
+ author = {Barrett, Leon and Narayanan, Srini},
+ title = {Learning all optimal policies with multiple criteria},
+ booktitle = {ICML},
+ year = {2008},
+ pages = {41--47},
+ numpages = {7},
+} 
+
+@article{ FSM12,
+ author={Oliehoek, Frans A. and Whiteson, Shimon and Spaan, Matthijs T.J.},
+ title={Exploiting Agent and Type Independence in Collaborative Imperfect Information Games},
+ journal={Yet to appear},
+ year={2012}
+}
+
+@article {ChansAlg,
+   author = {Chan, T. M.},
+   affiliation = {University of British Columbia Department of Computer Science V6T 1Z4 Vancouver British Columbia Canada},
+   title = {Optimal output-sensitive convex hull algorithms in two and three dimensions},
+   journal = {Discrete \& Computational Geometry},
+   keyword = {Mathematics and Statistics},
+   pages = {361-368},
+   volume = {16},
+   issue = {4},
+   url = {http://dx.doi.org/10.1007/BF02712873},
+   note = {10.1007/BF02712873},
+   abstract = {We present simple output-sensitive algorithms that construct the convex hull of a set of n points in two or three dimensions in worst-case optimal O ( n log h ) time and O (n) space, where h denotes the number of vertices of the convex hull.},
+   year = {1996}
+}
+
+@book{Clemen,
+    author = {Clemen, Robert T.},
+    day = {15},
+    edition = {2},
+    howpublished = {Hardcover},
+    isbn = {0534260349},
+    keywords = {analysis, decision, risk, theory, turs-project},
+    month = aug,
+    title = {{Making Hard Decisions: An Introduction to Decision Analysis}},
+    year = {1997}
+}
+
+@article{Dyer92,
+     title = {Multiple Criteria Decision Making, Multiattribute Utility Theory: The Next Ten Years},
+     author = {Dyer, J. S. and Fishburn, P. C. and Steuer, R. E. and Wallenius, J. and Zionts, S.},
+     journal = {Management Science},
+     volume = {38},
+     number = {5},
+     pages = {pp. 645-654},
+     year = {1992},
+}
+
+@inproceedings{Natarajan05,
+ author = {Natarajan, Sriraam and Tadepalli, Prasad},
+ title = {Dynamic preferences in multi-criteria reinforcement learning},
+ booktitle = {ICML},
+ year = {2005}
+} 
+
+@incollection {Chatter06,
+   author = {Chatterjee, Krishnendu and Majumdar, Rupak and Henzinger, Thomas},
+   affiliation = {UC Berkeley},
+   title = {Markov Decision Processes with Multiple Objectives},
+   booktitle = {STACS 2006},
+   series = {Lecture Notes in Computer Science},
+   editor = {Durand, Bruno and Thomas, Wolfgang},
+   isbn = {978-3-540-32301-3},
+   keyword = {Computer Science},
+   pages = {325-336},
+   volume = {3884},
+   year = {2006}
+}
+
+@book{Pearl,
+    author = {Pearl, Judea},
+    citeulike-article-id = {916904},
+    keywords = {bayesian, bibtex-import, inferencebayesian, networksuai2006causation},
+    posted-at = {2006-10-29 20:32:43},
+    priority = {0},
+    title = {Probabilistic Reasoning in Intelligent Systems:Networks of Plausible Inference},
+    year = {1988}
+}% THE standard work on bayesian networks
+
+@article{KokVlassis06,
+ author = {Kok, J.R. and Vlassis, N.},
+ title = {Collaborative Multiagent Reinforcement Learning by Payoff Propagation},
+ journal = {Journal of Machine Learning Research},
+ issue_date = {12/1/2006},
+ volume = {7},
+ month = dec,
+ year = {2006},
+ pages = {1789--1828},
+ numpages = {40},
+ acmid = {1248612},
+} 
+
+@article{Perseus,
+  author    = {Matthijs T. J. Spaan and
+               Nikos A. Vlassis},
+  title     = {Perseus: Randomized Point-based Value Iteration for POMDPs},
+  journal   = {CoRR},
+  volume    = {abs/1109.2145},
+  year      = {2011}
+}
+
+@article{marlSurvey,
+  author={Busoniu, L. and Babuska, R. and De Schutter, B.},
+  journal={IEEE Transactions on Systems, Man, and Cybernetics},     
+  title={A Comprehensive Survey of Multiagent Reinforcement Learning},
+  year={2008},
+  month={March},
+  volume={38},
+  number={2},
+  pages={156--172}
+}
+
+@inproceedings{Guestrin02,
+  author =       "C.E. Guestrin and D. Koller and R. Parr",
+  booktitle = {NIPS 2002: Advances in Neural Information Processing Systems 15}, 
+  title =        "Multiagent Planning with Factored {MDP}s",
+  year =         "2002",
+  pages = {1523--1530}
+}
+
+@phdthesis{Cheng, 
+ title={Algorithms for partially observable {M}arkov decision processes},
+ author={Cheng, Hsien-Te},
+ year ={1988},
+   school={University of British Columbia, Vancouver}
+}
+
+@phdthesis{RaduThesis, 
+ title={{AND/OR} Search Strategies for Combinatorial Optimization in Graphical Models},
+ author={Radu Marinescu},
+ year ={2008},
+   school={University of California, Irvine}
+}
+
+@article{vamplew2011empirical,
+	author={P. Vamplew and R. Dazeley and A. Berry and E. Dekker and R. Issabekov},
+	year={2011},
+	title={Empirical Evaluation Methods for Multiobjective Reinforcement Learning Algorithms},
+	journal={Machine Learning},
+	volume={84},
+	number={1-2},
+	pages={51-80}
+}
+
+@article{Oliehoek11, 
+	author = {Frans A. Oliehoek and Shimon Whiteson and Matthijs T. J. Spaan},
+        title = {Exploiting Agent and Type Independence in Collaborative Graphical {B}ayesian Games}, 
+	journal = {CoRR}, 
+        year = {2011}
+}
+
+@inproceedings{Qrouting,
+  author    = {Justin A. Boyan and
+               Michael L. Littman},
+  title     = {Packet Routing in Dynamically Changing Networks: A Reinforcement
+               Learning Approach},
+  booktitle = {Advances in Neural Information Processing Systems 6 (NIPS'93)},
+  year      = {1993},
+  pages     = {671-678}
+}
+
+@article {Ferretti11,
+author = {Ferretti, Valentina},
+title = {A Multicriteria Spatial Decision Support System Development for Siting a Landfill in the Province of Torino (Italy)},
+journal = {Journal of Multi-Criteria Decision Analysis},
+volume = {18},
+number = {5-6},
+pages = {231--252},
+year = {2011},
+}
+
+@article{Kaelbling98,
+    author = {Kaelbling, L.P. and Littman, M.L. and Cassandra, A.R.},
+    title = {Planning and acting in partially observable stochastic domains},
+    journal = {Artificial Intelligence},
+    year = {1998},
+    volume = {101},
+    pages = {99--134}
+}
+
+
+@book{pareto,
+  title={Manuel d'{\'e}conomie politique},
+  author={Pareto, V.},
+  year={1896}
+}
+@inproceedings{Becker,
+  author    =  {Becker, R. and Zilberstein, S. and 
+               Lesser, V. and Goldman, C.V.},
+  title     = {{Transition-Independent Decentralized Markov
+               Decision Processes}},
+  booktitle = {AAMAS 2003: Proceedings of the Second International Joint Conference on Autonomous Agents and Multiagent Systems},
+  pages     = {41--48},
+  year      = {2003}
+}
+
+@inproceedings{Nair2005ndpomdp,
+	author = {Nair, R and Varakantham, P and Tambe, M and Yokoo, M},
+	booktitle = AAAI05,
+	mendeley-groups = {Stochastic Planning,Stochastic Planning/POMDP},
+	title = {{Networked distributed POMDPs: A synthesis of distributed constraint optimization and POMDPs}},
+	year = {2005}, 
+	pages = {133--139}
+}
+
+@inproceedings{witwicki2010influence,
+  title={Influence-Based Policy Abstraction for Weakly-Coupled {Dec-POMDPs}.},
+  author={Witwicki, Stefan J. and Durfee, Edmund H.},
+  booktitle={ICAPS 2010: Proceedings of the Twentieth International Conference on Automated Planning and Scheduling},
+  pages={185--192},
+  year={2010}
+}
+
+
+@inproceedings{Kim10DCR,
+  author    = {Yoonheui Kim and Michael Krainin and Victor Lesser},
+  title     = {Application of Max-Sum Algorithm to Radar
+               Coordination and Scheduling},
+  booktitle = {DCR},
+  year      = {2010},
+}
+@inproceedings{Farinelli08AAMAS,
+    author =    {Farinelli, A. and Rogers, A. and Petcu, A. and Jennings, N.},
+    title =     {Decentralised coordination of low-power embedded devices using the max-sum algorithm},
+  booktitle = {Proceedings of the Seventh International Joint Conference on Autonomous Agents and Multiagent Systems},
+    year =      {2008},
+}
+
+@inproceedings{cassandra1994acting,
+  title={Acting optimally in partially observable stochastic domains},
+  author={Cassandra, Anthony R and Kaelbling, Leslie Pack and Littman, Michael L},
+  booktitle={AAAI 1994: Proceedings of the Twelfth National Conference on Artificial Intelligence},
+  pages={1023--1028},
+  year={1994}
+}
+
+@article{haus2000,
+title = {Value-Function Approximations for Partially Observable {M}arkov Decision Processes},
+author = {Hauskrecht, Milos},
+journal = {Journal of Artificial Intelligence Research},
+  volume={13},
+  pages={33--94},
+  year={2000}
+}
+
+@inproceedings{Tesauro,
+	author={G. Tesauro and R. Das and H. Chan and J. O. Kephart and C. Lefurgy and D. W. Levine and F. Rawson},
+	year={2007},
+	title={Managing Power Consumption and Performance of Computing Systems Using Reinforcement Learning},
+	pages={1497--1504},
+	booktitle={NIPS 2007: Advances in Neural Information Processing Systems 20}
+}
+
+@inproceedings{Lizotte,
+	author={D. J. Lizotte and M. Bowling and S. A. Murphy},
+	year={2010},
+	title={Efficient reinforcement learning with multiple reward functions for randomized clinical trial analysis},
+	booktitle={ICML 2010: Proceedings of the 27th International Conference on Machine Learning}
+}
+
+@article{Rollon06MOBE,
+	author={Roll\'on, E. and Larrosa, J.},
+	title={Bucket elimination for multiobjective optimization problems},
+	year={2006},
+	journal={Journal of Heuristics},
+	volume={12},
+	pages={307--328}
+}
+
+@inproceedings{delle2011bounded,
+	title={Bounded decentralised coordination over multiple objectives},
+	author={Delle Fave, F.M. and Stranders, R. and Rogers, A. and Jennings, N.R.},
+	booktitle={Proceedings of the Tenth International Joint Conference on Autonomous Agents and Multiagent Systems},
+	pages={371--378},
+	year={2011}
+}
+
+@article{delle2011multi,
+  title={Multi-objective Decentralised Coordination for Teams of Robotic Agents},
+  author={Delle Fave, Francesco Maria},
+  year={2011},
+}
+
+
+@book{Koller+Friedman09,
+    title =     {Probabilistic Graphical Models: Principles and Techniques},
+    author =    {Koller, D. and Friedman, N.},
+    year =      2009,
+}
+
+@article{Brazdil-2011,
+  author    = {Br{\'a}zdil, T. and
+               Brozek, V. and
+               Chatterjee, K. and
+               Forejt, V. and
+               Kucera, A.},
+  title     = {Two Views on Multiple Mean-Payoff Objectives in {M}arkov Decision
+               Processes},
+  journal   = {CoRR},
+  volume    = {abs/1104.3489},
+  year      = {2011},
+  ee        = {http://arxiv.org/abs/1104.3489},
+  bibsource = {DBLP, http://dblp.uni-trier.de}
+}
+
+@inproceedings{marinescu2012,
+  title={Multi-objective Influence Diagrams},
+  author={Marinescu, R. and Razak, A. and Wilson, N.},
+  booktitle={UAI 2012: Proceedings of the Twenty-Eighth Conference on Uncertainty in Artificial Intelligence},
+  year={2012},
+  pages={574--583}
+}
+
+@incollection{marinescu2009exploiting,
+  title={Exploiting problem decomposition in multi-objective constraint optimization},
+  author={Marinescu, Radu},
+  booktitle={CP 2009: Principles and Practice of Constraint Programming},
+  pages={592--607},
+  year={2009}
+}
+
+@InProceedings{wilson2015,
+  author       = {Wilson, Nic and Razak, Abdul and Marinescu, Radu},
+  title        = {Computing Possibly Optimal Solutions for Multi-Objective Constraint Optimisation with Tradeoffs},
+  booktitle    = {IJCAI 2015: Proceedings of the Twenty-Fourth International Joint Conference on Artificial Intelligence},
+  month        = {July},
+  pages	       = {815--821},
+  year         = {2015}
+}
+
+@inproceedings{gonzales2004gai,
+  title={{GAI} Networks for Utility Elicitation.},
+  author={Gonzales, Christophe and Perny, Patrice},
+  booktitle={AAAI: Proceedings of the Nineteenth National Conference on Artificial Intelligence},
+  pages={224--234},
+  year={2004}
+}
+
+
+@inproceedings{dubus2009,
+  title={Multiobjective optimization using {GAI} models},
+  author={Dubus, J.P. and Gonzales, C. and Perny, P.},
+  booktitle={IJCAI 2009: Proceedings of the Twenty-third International Joint Conference on Artificial Intelligence},
+  pages={1902--1907},
+  year={2009}
+}
+
+@incollection{dubus2009choquet,
+  title={Choquet optimization using {GAI} networks for multiagent/multicriteria decision-making},
+  author={Dubus, J.P. and Gonzales, C. and Perny, P.},
+  booktitle={ADT 2009: Proceedings of the First International Conference on Algorithmic Decision Theory},
+  pages={377--389},
+  year={2009}
+}
+
+@phdthesis{rollonThesis,
+   title={Multi-Objective Optimization for Graphical Models},
+   author={Roll\'on, E.},
+   year={2008},
+   school={Universitat Polit\`ecnica de Catalunya, Barcelona}
+}
+
+@incollection{vamplew2009constructing,
+  title={Constructing stochastic mixture policies for episodic multiobjective reinforcement learning tasks},
+  author={Vamplew, P. and Dazeley, R. and Barker, E. and Kelarev, A.},
+  booktitle={AI 2009: Proceedings of the Twenty-Second Australasian Joint Conference on Artificial Intelligence},
+  pages={340--349},
+  year={2009}
+}
+
+@inproceedings{cassandra1997incremental,
+  title={Incremental pruning: A simple, fast, exact method for partially observable {M}arkov decision processes},
+  author={Cassandra, A.R. and Littman, M.L. and Zhang, N.L.},
+  booktitle={UAI 1997: Proceedings of the Thirteenth Conference on Uncertainty in Artificial Intelligence},
+  pages={54--61},
+  year={1997}
+}
+
+@inproceedings{lizotte2010clinical,
+	author={D. Lizotte and M. Bowling and S. Murphy},
+	year={2010},
+	title={Efficient reinforcement learning with multiple reward functions for randomized clinical trial analysis},
+	booktitle={ICML 2010: Proceedings of the 27th International Conference on Machine Learning},
+	pages={695-702}
+}
+
+@inproceedings{Barrett-2008,
+ author = {Barrett, L. and Narayanan, S.},
+ title = {Learning all optimal policies with multiple criteria},
+ booktitle = {ICML 2008: Proceedings of The Twenty-fifth International Conference on Machine Learning},
+ year = {2008},
+ pages = {41-47}
+}
+
+@inproceedings{roijers2013multi,
+  title={Multi-Objective Variable Elimination for Collaborative Graphical Games},
+  author={Roijers, Diederik M. and Whiteson, Shimon and Oliehoek, Frans A.},
+  booktitle={AAMAS 2013: Proceedings of the Twelfth International Joint Conference on Autonomous Agents and Multiagent Systems},
+  year={2013},
+  pages={1209--1210},
+  note={Extended Abstract.}
+}
+
+
+@Article{jair13,
+  author       = {Diederik M. Roijers and Peter Vamplew and Shimon Whiteson and Richard Dazeley},
+  title        = {A Survey of Multi-Objective Sequential Decision-Making},
+  journal      = {Journal of Artificial Intelligence Research},
+  volume       = {47},
+  pages        = {67-113},
+  year         = 2013
+}
+
+@article{gong1992forest,
+	author={Peichen Gong},
+	year={1992},
+	title={Multiobjective Dynamic Programming for forest resource management},
+	journal={Forest Ecology and Management},
+	volume={48},
+	pages={43-54}
+}
+
+@article{bone2009,
+	author={Christopher Bone and Suzana Dragicevic},
+	year={2009},
+	title={{GIS} and Intelligent Agents for Multiobjective Natural Resource Allocation: A Reinforcement Learning Approach},
+	journal={Transactions in GIS},
+	volume={13},
+	number={3},
+	pages={253-272}
+}
+
+@INPROCEEDINGS{Henk97basicproperties,
+    author = {Martin Henk and Jürgen Richter-Gebert and Günter M. Ziegler},
+    title = {Basic Properties of Convex Polytopes},
+    booktitle = {Handbook of Discrete and Computational Geometry, Ch.13},
+    year = {1997},
+    pages = {243--270},
+}
+
+@Article{mcmullen1970maximum,
+  title={The maximum numbers of faces of a convex polytope},
+  author={McMullen, Peter},
+  journal={Mathematika},
+  volume={17},
+  number={2},
+  pages={179-184},
+  year={1970}
+}
+
+@book{Bertsimas1997Book_ILO,
+ author =   {Bertsimas, Dimitris and Tsitsiklis, John},
+ title =    {Introduction to Linear Optimization},
+ year =     {1997},
+} 
+
+@inproceedings{Mateescu12,
+  author    = {Robert Mateescu and
+               Rina Dechter},
+  title     = {The Relationship Between {AND/OR} Search and Variable Elimination},
+  booktitle = {UAI 2005: Proceedings of the Twenty-First Conference on Uncertainty in Artificial Intelligence},
+    year = {2005},
+    pages = {380--387}
+}
+
+@article{dechter2007and,
+  title={{AND/OR} search spaces for graphical models},
+  author={Dechter, Rina and Mateescu, Robert},
+  journal={Artificial intelligence},
+  volume={171},
+  number={2},
+  pages={73--106},
+  year={2007},
+}
+
+
+@incollection{kaibel2003some,
+  title={Some algorithmic problems in polytope theory},
+  author={Kaibel, Volker and Pfetsch, Marc E},
+  booktitle={Algebra, Geometry and Software Systems},
+  pages={23--47},
+  year={2003},
+}
+
+@article{chazelle1993optimal,
+  title={An optimal convex hull algorithm in any fixed dimension},
+  author={Chazelle, Bernard},
+  journal={Discrete \& Computational Geometry},
+  volume={10},
+  number={1},
+  pages={377--409},
+  year={1993},
+}
+
+@article{avis2000estimating,
+  title={Estimating the number of vertices of a polyhedron},
+  author={Avis, David and Devroye, Luc},
+  journal={Information processing letters},
+  volume={73},
+  number={3},
+  pages={137--143},
+  year={2000},
+}
+
+@inproceedings{murphy2013community,
+  title={A Community-Driven Roadmap for the Adoption of Safety Security and Rescue Robots},
+  booktitle = {11th IEEE International Symposium on Safety, Security, and Rescue Robotics},
+  author={Murphy, Robin R and Kleiner, Alexander},
+  year={2013}
+}
+
+@inproceedings{pham2013learning,
+  title={Learning Coordinated Traffic Light Control},
+  author={Pham, Tong Thanh and Brys, Tim and Taylor, Matthew E and Brys, Tim and Drugan, Madalina M and Bosman, Peter AN and Cock, Martine-De and Lazar, Cosmin and Demarchi, L and Steenhoff, David and others},
+  booktitle={Proceedings of the Adaptive and Learning Agents workshop (at AAMAS-13)},
+  volume={10},
+  pages={1196--1201},
+  year={2013}
+}
+
+
+@inproceedings{scharpff2013coordinating,
+	author = {Scharpff, Joris and Spaan, Matthijs T. J. and de Weerdt, Mathijs M. and Volker, Leentje},
+	title = {{Planning under uncertainty for coordinating infrastructural maintenance}},
+  booktitle={Proceedings of the International Conference on Automated Planning and Scheduling},
+	year = {2013},
+	pages = {425--433}
+}
+
+@article{bergemann2006efficient,
+  title={Efficient dynamic auctions},
+  author={Bergemann, Dirk and Valimaki, Juuso},
+  year={2006},
+  note={Cowles Foundation Discussion Paper}
+}
+
+
+@inproceedings{cavallo2008efficiency,
+  title={Efficiency and redistribution in dynamic mechanism design},
+  author={Cavallo, Ruggiero},
+  booktitle={EC 2008: Proceedings of the 9th ACM conference on electronic commerce},
+  pages={220--229},
+  year={2008}
+}
+
+
+@inproceedings{scharpff2016solving,
+  title={Solving Transition-Independent Multi-agent {MDP}s with Sparse Interactions},
+  author={Scharpff, Joris and Roijers, Diederik M and Oliehoek, Frans A and Spaan, Matthijs TJ and de Weerdt, Mathijs M},
+  booktitle={AAAI 2016: Proceedings of the Thirtieth AAAI Conference on Artificial Intelligence},
+  year={2016},
+  note={To Appear.} 
+}
+
+@article{graham1972efficient,
+  title={An efficient algorithm for determining the convex hull of a finite planar set},
+  author={Graham, Ronald L.},
+  journal={Information processing letters},
+  volume={1},
+  number={4},
+  pages={132--133},
+  year={1972},
+}
+
+
+@inproceedings{Hoey1999,
+	author = {Hoey, Jesse and St-Aubin, Robert and Hu, Alan and Boutilier, Craig},
+	booktitle = {UAI 1999: Proceedings of the Fifteenth conference on Uncertainty in artificial intelligence},
+	mendeley-groups = {Stochastic Planning,Stochastic Planning/MDP,Stochastic Planning/MDP/Factored MDP},
+	title = {{SPUDD: Stochastic planning using decision diagrams}},
+        pages = {279--288},
+	year = {1999}
+}
+
+
+@inproceedings{oliehoek2013approximate,
+  title={Approximate solutions for factored Dec-POMDPs with many agents},
+  author={Oliehoek, Frans A and Whiteson, Shimon and Spaan, Matthijs TJ},
+  booktitle={Proceedings of the 2013 international conference on Autonomous agents and multi-agent systems},
+  pages={563--570},
+  year={2013},
+  organization={International Foundation for Autonomous Agents and Multiagent Systems}
+}
+
+
+@inproceedings{Oliehoek2010BG,
+ author = {Oliehoek, Frans A. and Spaan, Matthijs T. J. and Dibangoye, Jilles S. and Amato, Christopher},
+ title = {Heuristic Search for Identical Payoff {B}ayesian Games},
+ booktitle = {AAMAS 2010: Proceedings of the Ninth International Joint Conference on Autonomous Agents and Multiagent Systems},
+ year = {2010},
+ pages = {1115--1122}
+} 
+
+@inproceedings{freuder1985taking,
+  title={Taking Advantage of Stable Sets of Variables in Constraint Satisfaction Problems.},
+  author={Freuder, Eugene C and Quinn, Michael J},
+  booktitle={IJCAI},
+  volume={85},
+  pages={1076--1078},
+  year={1985}
+}
+
+@InProceedings{roijers14bounded,
+  author       = {Diederik M. Roijers and Joris Scharpff and Matthijs T.J. Spaan and Frans A. Oliehoek and Mathijs de Weerdt and Shimon Whiteson},
+  title        = {Bounded Approximations for Linear Multi-Objective Planning under Uncertainty},
+  booktitle    = {ICAPS 2014: Proceedings of the Twenty-Fourth International Conference on Automated Planning and Scheduling},
+  month        = {June},
+  year         = {2014},
+ pages = {262--270}
+}
+
+@article{sontag2011introduction,
+  title={Introduction to dual decomposition for inference},
+  author={Sontag, David and Globerson, Amir and Jaakkola, Tommi},
+  journal={Optimization for Machine Learning},
+  volume={1},
+  pages={219--254},
+  year={2011},
+}
+
+@article{liu13variational,
+  author  = {Qiang Liu and Alexander Ihler},
+  title   = {Variational Algorithms for Marginal {MAP}},
+  journal = {Journal of Machine Learning Research},
+  year    = {2013},
+  volume  = {14},
+  pages   = {3165--3200}
+}
+
+
+
+@InProceedings{bayardo95space,
+  author       = {Roberto J. (Jr.) Bayardo and Daniel P. Miranker},
+  title        = {On the Space-Time Trade-off in Solving Constraint Satisfaction Problems},
+  booktitle    = {IJCAI 1995: Proceedings of the Fourteenth International Joint Conference on Artificial Intelligence},
+  pages        = {558--562},
+  year         = {1995}
+}
+
+@InProceedings{roijers14linear,
+  author       = {Diederik M. Roijers and Shimon Whiteson and Frans A. Oliehoek},
+  title        = {Linear Support for Multi-Objective Coordination Graphs},
+  booktitle    = {AAMAS 2014: Proceedings of the Thirteenth International Joint Conference on Autonomous Agents and Multi-Agent Systems},
+  month        = {May},
+  pages         = {1297--1304},
+  year         = {2014}
+}
+
+@InProceedings{roijers13computing,
+  author       = {Roijers, D. M. and Whiteson, S. and Oliehoek, F.},
+  title	       = {Computing Convex Coverage Sets for Multi-Objective Coordination Graphs},
+  booktitle    = {ADT 2013: Proceedings of the Third International Conference on Algorithmic Decision Theory},
+  month	       = {November},
+  pages        = {309--323},
+  year	       = {2013}
+}
+
+@book{RinaBook,
+  title={Reasoning with Probabilistic and Deterministic Graphical Models: Exact Algorithms},
+  author={Dechter, Rina},
+  series={Synthesis Lectures on Artificial Intelligence and Machine Learning},
+  volume={7},
+  number={3},
+  year={2013},
+}
+
+@incollection{dechter1998bucket,
+  title={Bucket elimination: A unifying framework for probabilistic inference},
+  author={Dechter, Rina},
+  booktitle={Learning in graphical models},
+  pages={75--104},
+  year={1998},
+}
+
+@article{arnborg1985efficient,
+  title={Efficient algorithms for combinatorial problems on graphs with bounded decomposability --- A survey},
+  author={Arnborg, Stefan},
+  journal={BIT Numerical Mathematics},
+  volume={25},
+  number={1},
+  pages={1--23},
+  year={1985},
+}
+
+
+@article{thompson1933likelihood,
+  title={On the likelihood that one unknown probability exceeds another in view of the evidence of two samples},
+  author={Thompson, W. R.},
+  journal={Biometrika},
+  volume={25},
+  number={3/4},
+  pages={285--294},
+  year={1933}
+}
+
+
+@InProceedings{marinescu2011efficient,
+  title={Efficient approximation algorithms for multi-objective constraint optimization},
+  author={Marinescu, Radu},
+  booktitle={ADT 2011: Proceedings of the Second International Conference on Algorithmic Decision Theory},
+  pages={150--164},
+  month={October},
+  year={2011}
+}
+
+@inproceedings{rosenthal77nonserial,
+ author = {Rosenthal, Arnie},
+ title = {Nonserial Dynamic Programming is Optimal},
+ booktitle = {Proceedings of the Ninth Annual ACM Symposium on Theory of Computing},
+ year = {1977},
+ location = {Boulder, Colorado, USA},
+ pages = {98--105},
+} 
+
+@article{yeoh2010bnb,
+  title={{BnB}-{ADOPT}: An Asynchronous Branch-and-Bound {DCOP} Algorithm},
+  author={Yeoh, William and Felner, Ariel and Koenig, Sven},
+  journal={Journal of Artificial Intelligence Research},
+  volume={38},
+  pages={85--133},
+  year={2010}
+}
+
+@inproceedings{furcy2005limited,
+  title={Limited discrepancy beam search},
+  author={Furcy, David and Koenig, Sven},
+  booktitle={IJCAI 2005: Proceedings of the Nineteenth International Joint Conference on Artificial Intelligence},
+  pages={125--131},
+  year={2005}
+}
+
+@book{pearl1988probabilistic,
+  title={Probabilistic reasoning in intelligent systems: networks of plausible inference},
+  author={Pearl, Judea},
+  year={1988},
+}
+
+@incollection{kok2006using,
+  title={Using the max-plus algorithm for multiagent decision making in coordination graphs},
+  author={Kok, Jelle R and Vlassis, Nikos},
+  booktitle={RoboCup 2005: Robot Soccer World Cup IX},
+  pages={1--12},
+  year={2006}
+}
+
+@inproceedings{perny2013approximation,
+  title={Approximation of {L}orenz-Optimal Solutions in Multiobjective {M}arkov Decision Processes},
+  author={Perny, Patrice and Weng, Paul and Goldsmith, Judy and Hanna, Josiah P},
+  booktitle={UAI 2013: Proceedings of the Twenty-Ninth Conference on Uncertainty In Artificial Intelligence},
+  year={2013},
+  pages={508--517}
+}
+
+
+@inproceedings{crites1996elevator,
+	author={Robert H. Crites and Andrew G. Barto},
+	editor={D. S. Touretzky and M. C. Mozer and M. E. Hasselmo},
+	year={1996},
+	title={Improving Elevator Performance Using Reinforcement Learning},
+	booktitle={Advances in Neural Information Processing Systems 8},
+	pages={1017-1023}
+}
+
+@article{ernst2004power,
+	author={Damien Ernst and M. Glavic and Louis Wehenkel},
+	year={2004},
+	title={Power Systems Stability Control: Reinforcement Learning Framework},
+	journal={IEEE Transactions on Power Systems},
+	volume={19},
+	number={1},
+	pages={427-435}
+}
+
+@article{bhattacharya2003water,
+	author={B. Bhattacharya and A. H. Lobbrecht and D. P. Solomantine},
+	year={2003},
+	title={Neural networks and reinforcement learning in control of water systems},
+	journal={Journal of Water Resources Planning and Management},
+	volume={129},
+	number={6},
+	pages={458-465}
+}
+
+@incollection {SpaanPOMDP,
+   title={Partially observable {M}arkov decision processes},
+   author={Spaan, Matthijs TJ},
+   booktitle = {Reinforcement Learning: State-of-the-Art},
+   series = {Adaptation, Learning, and Optimization},
+   editor = {Wiering, Marco A. and Van Otterlo, Martijn},
+   pages = {387--414},
+   volume = {12},
+   year = {2012}
+}
+
+
+@incollection {KoberPeters,
+   author = {Kober, Jens and Peters, Jan},
+   title = {Reinforcement Learning in Robotics: A Survey},
+   booktitle = {Reinforcement Learning: State-of-the-Art},
+   series = {Adaptation, Learning, and Optimization},
+   editor = {Wiering, Marco A. and Van Otterlo, Martijn},
+   pages = {579--610},
+   volume = {12},
+   year = {2012}
+}
+
+@incollection {Szita12,
+   author = {Szita, Istv\'an},
+   title = {Reinforcement Learning in Games},
+   booktitle = {Reinforcement Learning: State-of-the-Art},
+   series = {Adaptation, Learning, and Optimization},
+   editor = {Wiering, Marco A. and Van Otterlo, Martijn},
+   pages = {539-577},
+   volume = {12},
+   year = {2012}
+}
+
+@article{guizzo2011google,
+  title={How {G}oogle's self-driving car works},
+  author={Guizzo, Erico},
+  journal={IEEE Spectrum Online, October},
+  volume={18},
+  year={2011}
+}
+
+
+@article{thiebaux2006decision,
+  title={Decision-Theoretic Planning with non-Markovian Rewards.},
+  author={Thi{\'e}baux, Sylvie and Gretton, Charles and Slaney, John K and Price, David and Kabanza, Froduald and others},
+  journal={Journal of Artificial Intelligence Research},
+  volume={25},
+  pages={17--74},
+  year={2006}
+}
+
+
+@incollection{wiering2012reinforcement,
+  title={Reinforcement Learning: State-of-the-Art},
+  author={Wiering, Marco A. and Van Otterlo, Martijn},
+  booktitle={Adaptation, Learning, and Optimization},
+  volume={12},
+  year={2012},
+}
+
+@phdthesis{oliehoek2010value,
+  title={Value-based planning for teams of agents in stochastic partially observable environments},
+  author={Oliehoek, Frans A.},
+  year={2010},
+  school={University of Amsterdam},
+}
+
+@phdthesis{sondik71,
+  title={The optimal control of partially observable {M}arkov decision processes},
+  author={E. J. Sondik},
+  year={1971},
+  school={Stanford University}
+}
+
+@book{sutton1998introduction,
+  title={Introduction to reinforcement learning},
+  author={Sutton, Richard S and Barto, Andrew G},
+  year={1998},
+}
+
+@article{roijers2015computing,
+  title={Computing convex coverage sets for faster multi-objective coordination},
+  author={Roijers, D.M. and Whiteson, S. and Oliehoek, F.},
+  journal={Journal of Artificial Intelligence Research},
+  volume={52},
+  pages={399--443},
+  year={2015}
+}
+
+@techreport{Oliehoek14IASTR,
+    author =        {Frans A. Oliehoek and Christopher Amato},
+    title =         {{Dec-POMDPs} as Non-Observable {MDPs}},
+    type =          {IAS technical report},
+    number =        {IAS-UVA-14-01},
+    address =       {Amsterdam, The Netherlands},
+    year =          2014
+}
+
+@InProceedings{roijers2015point,
+  author       = {Roijers, Diederik M.  and Whiteson, Shimon and Oliehoek, Frans A.},
+  title        = {Point-Based Planning for Multi-Objective {POMDPs}},
+  booktitle    = {IJCAI 2015: Proceedings of the Twenty-Fourth International Joint Conference on Artificial Intelligence},
+  month        = {July},
+  pages         = {1666--1672},
+  year         = {2015}
+}
+
+
+@ InProceedings{scharpffsolving,
+  title={Solving Multi-agent {MDP}s Optimally with Conditional Return Graphs},
+  author={Scharpff, Joris and Roijers, Diederik M. and Oliehoek, Frans A. and Spaan, Matthijs T.J. and de Weerdt, Mathijs M.},
+booktitle    = {MSDM 2015: Proceedings of the AAMAS Workshop on Multi-Agent Sequential Decision Making in Uncertain Domains},
+  month        = {May},
+  year         = {2015}
+}
+
+@inproceedings{soh2011,
+	author={Harold Soh and Yiannis Demiris},
+	year={2011},
+	title={Evolving Policies for Multi-Reward Partially Observable {M}arkov Decision Processes ({MR-POMDPs})},
+	booktitle={GECCO'11: Proceedings of the 13th Annual Conference on Genetic and Evolutionary Computation},
+	location={Dublin, Ireland},
+	pages={713-720}
+}
+
+@inproceedings{soh2011multireward,
+ author = {Soh, H. and Demiris, Y.},
+ title = {Multi-reward Policies for Medical Applications: Anthrax Attacks and Smart Wheelchairs},
+ booktitle={GECCO'11: Proceedings of the 13th Annual Conference on Genetic and Evolutionary Computation},
+ year = {2011},
+ pages = {471--478}
+} 
+
+@inproceedings{handa2009multiobjective-eda-rl,
+	author={Hisashi Handa},
+	year={2009},
+	title={Solving Multi-Objective Reinforcement Learning Problems by {EDA-RL} - Acquisition of Various Strategies},
+	booktitle={ISDA 2009: Proceedings of the Ninth Internatonal Conference on Intelligent Sysems Design and Applications},
+	pages={426--431}
+}
+
+@inproceedings{handa2009eda-rl,
+	author={Hisashi Handa},
+	year={2009},
+	title={{EDA-RL}: Estimation of distribution algorithms for reinforcement learning problems},
+	booktitle={GECCO 2009: ACM/SIGEVO Genetic and Evolutionary Computation Conference},
+	pages={405--412}
+}
+
+@InProceedings{inja14queued,
+  author       = {Inja, Maarten and Kooijman, Chiel and de Waard, Maarten and Roijers, Diederik M. and Whiteson, Shimon},
+  title        = {Queued {P}areto Local Search for Multi-Objective Optimization},
+  booktitle    = {PPSN 2014: Proceedings of the Thirteenth International Conference on Parallel Problem Solving from Nature},
+  month        = {September},
+  pages         = {589--599},
+  year         = {2014}
+}
+
+@InProceedings{kooijman15pareto,
+  author       = {Kooijman, Chiel and de Waard, Maarten and Inja, Maarten and Roijers, Diederik M. and Whiteson, Shimon},
+  title        = {Pareto Local Policy Search for {MOMDP} Planning},
+  booktitle    = {ESANN 2015: Special Session on Emerging Techniques and Applications in Multi-Objective Reinforcement Learning at the European Symposium on Artificial Neural Networks, Computational Intelligence and Machine Learning 2015},
+  pages         = {53--58},
+  month        = {April},
+  year         = {2015}
+}
+
+@inproceedings{wiering2014model,
+  title={Model-based multi-objective reinforcement learning},
+  author={Wiering, Marco A. and Withagen, Maikel and Drugan, Madalina M},
+  booktitle={ADPRL 2014: Proceedings of the IEEE Symposium on Adaptive Dynamic Programming and Reinforcement Learning},
+  pages={1--6},
+  year={2014}
+}
+
+@incollection{franklin1997agent,
+  title={Is it an Agent, or just a Program?: A Taxonomy for Autonomous Agents},
+  author={Franklin, Stan and Graesser, Art},
+  booktitle={Intelligent agents III agent theories, architectures, and languages},
+  pages={21--35},
+  year={1997},
+}
+
+@book{russell1995modern,
+  title={Artificial Intelligence: A modern approach},
+  author={Russell, Stuart and Norvig, Peter and Intelligence, Artificial},
+  year={1995}
+}
+
+@article{monostori2006agent,
+  title={Agent-based systems for manufacturing},
+  author={Monostori, L{\'a}szl{\'o} and V{\'a}ncza, J{\'o}zsef and Kumara, Soundar RT},
+  journal={CIRP Annals-Manufacturing Technology},
+  volume={55},
+  number={2},
+  pages={697--720},
+  year={2006},
+}
+
+@phdthesis{van2014agent,
+  title={Agent Technology in Agile Multiparallel Manufacturing and Product Support},
+  author={Van Moergestel, Leo J.M.},
+  year={2014},
+  school={Utrecht University}
+}
+
+@ phdthesis{cassandra1998exact,
+  title={Exact and approximate algorithms for partially observable Markov decision processes},
+  author={Cassandra, Anthony Rocco},
+  year={1998},
+  school ={Brown University}
+}
+
+
+@phdthesis{pardoe2011adaptive,
+  title={Adaptive trading agent strategies using market experience},
+  author={Pardoe, David Merrill},
+  year={2011},
+  school = {University of Texas at Austin}
+}
+
+@inproceedings{ketter2013autonomous,
+  title={Autonomous agents in future energy markets: the 2012 power trading agent competition},
+  author={Ketter, Wolfgang and Peters, Markus and Collins, John},
+  booktitle={BNAIC 2013: Proceedings of the 25th Benelux Conference on Artificial Intelligence},
+  year={2013},
+  pages={328--329}
+}
+
+@book{tambe2011security,
+  title={Security and game theory: Algorithms, deployed systems, lessons learned},
+  author={Tambe, Milind},
+  year={2011},
+}
+
+@InProceedings{zintgraf2015quality,
+  author       = {Zintgraf, Luisa M. and Kanters, Timon V. and Roijers, Diederik M.  and Oliehoek, Frans A. and Beau, Philipp},
+  title        = {Quality Assessment of {MORL} Algorithms: A Utility-Based Approach},
+  booktitle    = {Benelearn 2015: Proceedings of the Twenty-Fourth Belgian-Dutch Conference on Machine Learning},
+  month        = {June},
+  year         = {2015}
+}
+
+@InProceedings{ewrl2015,
+  author       = {Roijers, Diederik M.  and Whiteson, Shimon and Vamplew, Peter and Dazeley, Richard},
+  title        = {Why Multi-objective Reinforcement Learning?},
+  booktitle    = {EWRL 2015: Proceedings of the 12th European Workshop on Reinforcement Learning},
+  month        = {July},
+  year         = {2015}
+}
+
+@inproceedings{Feng12,
+  title={Region-based incremental pruning for {POMDPs}},
+  author={Feng, Zhengzhu and Zilberstein, Shlomo},
+  booktitle={UAI 2004: Proceedings of the Twentieth Conference on Uncertainty in Artificial Intelligence},
+  pages={146--153},
+  year={2004}
+}
+
+@article{auer2010ucb,
+  title={{UCB} revisited: Improved regret bounds for the stochastic multi-armed bandit problem},
+  author={Auer, P. and Ortner, R.},
+  journal={Periodica Mathematica Hungarica},
+  volume={61},
+  number={1-2},
+  pages={55--65},
+  year={2010},
+}
+
+
+@article{kuleshov2014algorithms,
+  title={Algorithms for multi-armed bandit problems},
+  author={Kuleshov, Volodymyr and Precup, Doina},
+  journal={arXiv preprint arXiv:1402.6028},
+  year={2014}
+}
+
+
+@inproceedings{drugan2013designing,
+  title={Designing multi-objective multi-armed bandits algorithms: A study},
+  author={Drugan, Madalina M. and Now\'e, Ann},
+  booktitle={IJCNN 2013: Proceedings of the 2013 International Joint Conference on Neural Networks },
+  pages={1--8},
+  year={2013}
+}
+
+@inproceedings{yahyaa2014scalarized,
+  title={The scalarized multi-objective multi-armed bandit problem: an empirical study of its exploration vs. exploitation tradeoff},
+  author={Yahyaa, Saba Q. and Drugan, Madalina M. and Manderick, Bernard},
+  booktitle={IJCNN 2014: Proceedings of the 2014 International Joint Conference on Neural Networks},
+  pages={2290--2297},
+  year={2014}
+}
+
+@book{puterman1994markov,
+  title={Markov decision processes: discrete stochastic dynamic programming},
+  author={Puterman, Martin L},
+  year={1994},
+}
+
+@incollection{altman2002applications,
+  title={Applications of Markov decision processes in communication networks},
+  author={Altman, Eitan},
+  booktitle={Handbook of Markov decision processes},
+  pages={489--536},
+  year={2002},
+}
+
+
+@book{howard1960dynamic,
+  title={Dynamic programming and {M}arkov decision processes},
+  author={Howard, Ronald A.},
+  journal={Cambridge, MA},
+  year={1960},
+}
+
+@article{Boutilier99,
+	author={Boutilier, Craig and Dean, Thomas and Hanks, Steve},
+	title={Decision-Theoretic Planning: Structural Assumptions and Computational Leverage},
+	journal={Journal of Artificial Intelligence Research},
+	volume={11},
+	year={1999},
+	pages={1--94}
+}
+
+@inproceedings{Boutilier1996mmdp,
+	author = {Boutilier, C.},
+	booktitle = {TARK 1996: Proceedings of the 6th conference on Theoretical aspects of rationality and knowledge},
+	mendeley-groups = {Stochastic Planning,Stochastic Planning/MDP},
+	title = {{Planning, learning and coordination in multiagent decision processes}},
+	pages = {195--210},
+	year = {1996}
+}
+
+@article{White82,
+title = "Multi-objective infinite-horizon discounted {M}arkov decision processes",
+journal = "Journal of Mathematical Analysis and Applications",
+volume = "89",
+number = "2",
+pages = "639 - 647",
+year = "1982",
+note = "",
+doi = "10.1016/0022-247X(82)90122-6",
+url = "http://www.sciencedirect.com/science/article/pii/0022247X82901226",
+author = "D.J White"
+}
+
+@book{BellmanDP,
+	author= {Bellman, R.E.},
+	title = {Dynamic Programming},
+	year = {1957},
+        address = {Princeton, New Jersey, USA}
+}
+
+@article{BellmanMDP,
+	author={Bellman, R. E.},
+	title={A {M}arkovian decision process},
+	journal={Journal of Mathematics and Mechanics},
+	volume={6},
+	year={1957},
+	pages={679--684}
+}
+
+@article{manne1960linear,
+  title={Linear programming and sequential decisions},
+  author={Manne, Alan S},
+  journal={Management Science},
+  volume={6},
+  number={3},
+  pages={259--267},
+  year={1960}
+}
+
+@article{madani2003undecidability,
+  title={On the undecidability of probabilistic planning and related stochastic optimization problems},
+  author={Madani, O. and Hanks, S. and Condon, A.},
+  journal={Artificial Intelligence},
+  volume={147},
+  number={1},
+  pages={5--34},
+  year={2003}
+}
+
+@article{aastrom1965optimal,
+  title={Optimal control of {M}arkov processes with incomplete state information},
+  author={{\AA}str{\"o}m, Karl J},
+  journal={Journal of Mathematical Analysis and Applications},
+  volume={10},
+  number={1},
+  pages={174--205},
+  year={1965},
+}
+
+@article{monahan1982state,
+  title={State of the art --- a survey of partially observable {M}arkov decision processes: theory, models, and algorithms},
+  author={Monahan, G.E.},
+  journal={Management Science},
+  volume={28},
+  number={1},
+  pages={1--16},
+  year={1982}
+}
+
+@article{pbsurvey, 
+year={2013},
+journal={Journal of Autonomous Agents and Multi-Agent Systems},
+volume={27},
+number={1},
+title={A survey of point-based {POMDP} solvers},
+author={Shani, G. and Pineau, J. and Kaplow, R.},
+pages={1-51}
+}
+
+@article{pineau2006anytime,
+  title={Anytime Point-Based Approximations for Large {POMDP}s.},
+  author={Pineau, J. and Gordon, G.J. and Thrun, S.},
+  journal={Journal of Artificial Intelligence Research},
+  volume={27},
+  pages={335--380},
+  year={2006}
+}
+
+@inproceedings{poupart2011closing,
+  title={Closing the Gap: Improved Bounds on Optimal {POMDP} Solutions},
+  author={Poupart, P. and Kim, K.E. and Kim, D.},
+  booktitle={ICAPS 2011: Proceedings of the Twenty-First International Conference on Automated Planning and Scheduling},
+  year={2011}, 
+  pages={194--201}
+}
+
+@inproceedings{kurniawati2008sarsop,
+  title={{SARSOP}: Efficient Point-Based {POMDP} Planning by Approximating Optimally Reachable Belief Spaces.},
+  author={Kurniawati, H. and Hsu, D. and Lee, W.S.},
+  booktitle={Robotics: Science and Systems},
+  year={2008}
+}
+
+
+@InProceedings{wray2015,
+  author       = {Wray, Kyle H. and Zilberstein, Shlomo},
+  title        = {Multi-Objective {POMDP}s with Lexicographic Reward Preferences},
+  booktitle    = {IJCAI 2015: Proceedings of the Twenty-Fourth International Joint Conference on Artificial Intelligence},
+  month        = {July},
+  year         = {2015},
+  pages	       = {1719--1725}
+}
+
+@article{oliehoek2015influence,
+  author =    {Frans A. Oliehoek
+                 and Matthijs T. J. Spaan
+                 and Stefan Witwicki},
+    title =     {Factored Upper Bounds for Multiagent Planning Problems
+under Uncertainty with Non-Factored Value Functions},
+    booktitle = {IJCAI 2015: Proceedings of the Twenty-Fourth
+International Joint Conference on Artificial Intelligence},
+    year =      {2015},
+    pages =     {1645--1651}
+}
+
+@inproceedings{whiteson2015multi,
+  title={Multi-objective Decision Making},
+  author={Whiteson, Shimon and Roijers, Diederik M},
+  booktitle={IJCAI 2015 tutorials},
+  year={2015}
+}
+
+@inproceedings{roijers2015variational, 
+  title={Variational Multi-Objective Coordination},
+  author={Roijers, Diederik M. and Whiteson, Shimon and Ihler, Alexander T. and Oliehoek, Frans A.},
+  booktitle={MALIC 2015: NIPS Workshop on Learning, Inference and Control of Multi-Agent Systems},
+  year={2015}
+}
+
+@article{Nayyar13TAC,
+    title =     {Decentralized Stochastic control with partial history sharing: A common information approach},
+    author =    {Ashutosh Nayyar and Aditya Mahajan and Demosthenis Teneketzis},
+    journal =   {IEEE Transactions on Automatic Control},
+    volume =    58, 
+    pages =     {1644--1658},
+    year =      2013,
+}
+
+@inproceedings{MacDermed13NIPS26,
+    title = {Point Based Value Iteration with Optimal Belief Compression for {Dec-POMDPs}},
+    author = {Liam C. MacDermed and Charles Isbell},
+    booktitle = {NIPS 2013: Advances in Neural Information Processing Systems 26},
+    pages = {100--108},
+    year = {2013}
+}
+
+@inproceedings{Dibangoye13IJCAI,
+    author =   {Jilles S. Dibangoye and 
+                Christopher Amato and
+                Olivier Buffet and
+                Fran\c{c}ois Charpillet},
+    title =     {Optimally Solving {Dec-POMDPs} as Continuous-State {MDPs}},
+    booktitle = {IJCAI 2013: Proceedings of the Twenty-Second International Joint Conference on Artificial Intelligence},
+    year =      2013,
+}
+
+@techreport{Oliehoek14IASTR,
+    author =        {Frans A. Oliehoek and Christopher Amato},
+    title =         {{Dec-POMDPs} as Non-Observable {MDPs}},
+    institution =   {Intelligent Systems Lab, University of Amsterdam},
+    type =          {IAS technical report},
+    number =        {IAS-UVA-14-01},
+    address =       {Amsterdam, The Netherlands},
+    month =         oct,
+    year =          2014
+}
+
+
+@article{jarvis1973identification,
+  title={On the identification of the convex hull of a finite set of points in the plane},
+  author={Jarvis, Ray A},
+  journal={Information Processing Letters},
+  volume={2},
+  number={1},
+  pages={18--21},
+  year={1973}
+}
+
+% epsilon indicator
+@article{Zitzler2003,
+  title={Performance assessment of multiobjective optimizers: An analysis and review},
+  author={Zitzler, Eckart and Thiele, Lothar and Laumanns, Marco and Fonseca, Carlos M and Da Fonseca, Viviane Grunert},
+  journal={IEEE Transactions on Evolutionary Computation},
+  volume={7},
+  number={2},
+  pages={117--132},
+  year={2003}
+}
+
+@article{spaandecision,
+  title={Decision Making in Multiagent Settings: Team Decision Making},
+  author={Spaan, Matthijs and Amato, Christopher and Zilberstein, Shlomo},
+  note={Tutorial slides},
+  year={2011}
+}
+
+@article{bernstein2002complexity,
+  title={The complexity of decentralized control of {M}arkov decision processes},
+  author={Bernstein, Daniel S and Givan, Robert and Immerman, Neil and Zilberstein, Shlomo},
+  journal={Mathematics of operations research},
+  volume={27},
+  number={4},
+  pages={819--840},
+  year={2002},
+}
+
+@inproceedings{messias2013aamas,
+  title={Multiagent {POMDP}s with Asynchronous Execution},
+  author={Messias, J. and Spaan, M. T. J. and Lima, P. U.},
+  booktitle={Proceedings of the 12th International Conference on Autonomous Agents and Multiagent Systems (AAMAS-13) - Extended Abstract},
+  year={2013}
+}
+
+@phdthesis{messias2014phd,
+  title={Decision-Making under Uncertainty for Real Robot Teams},
+  author={de Sousa Messias, Jo{\~a}o Vicente Teixeira},
+  year={2014},
+  school={Instituto Superior T{\'e}cnico, Lisbon, Portugal}
+}
+
+@article{WhiteKim80,
+	author={C. C. White and K. M. Kim},
+	year={1980},
+	title={Solution procedures for solving vector criterion {M}arkov decision processes},
+	journal={Large Scale Systems},
+	volume={1},
+	pages={129-140}
+}
+
+@article{vanmoffaert14a,
+  author  = {Kristof Van Moffaert and Ann Now\'e},
+  title   = {Multi-Objective Reinforcement Learning using Sets of {P}areto Dominating Policies},
+  journal = {Journal of Machine Learning Research},
+  year    = {2014},
+  volume  = {15},
+  pages   = {3483--3512}
+}
+
+@inproceedings{vanmoffaert2014novel,
+  title={A Novel Adaptive Weight Selection Algorithm for Multi-Objective Multi-Agent Reinforcement Learning},
+  author={Van Moffaert, Kristof and Brys, Tim and Chandra, Arjun and Esterle, Lukas and Lewis, Peter R and Now{\'e}, Ann},
+  booktitle={IJCNN 2014: Proceedings of the 2013 International Joint Conference on Neural Networks},
+  pages={2306--2314},
+  year={2014}
+}
+
+@article{kim2005adaptive,
+  title={Adaptive weighted-sum method for bi-objective optimization: Pareto front generation},
+  author={Kim, Il Yong and de Weck, O. L. },
+  journal={Structural and multidisciplinary optimization},
+  volume={29},
+  number={2},
+  pages={149--158},
+  year={2005},
+}
+
+@inproceedings{Oliehoek11arxiv,
+    author    = {Frans A. Oliehoek and
+               Shimon Whiteson and
+               Matthijs T. J. Spaan},
+    title     = {Exploiting Structure in Cooperative {B}ayesian Games},
+    booktitle =   {UAI 2012: Proceedings of the Twenty-Eighth Conference on Uncertainty in Artificial Intelligence},
+    pages    = {654--664},
+    year      = {2012}
+}
+
+@inproceedings{Wiggers15MSDM,
+    title =     {Structure in the Value Function of Zero-Sum Games of Incomplete Information},
+    author =    {Auke J. Wiggers and Frans A. Oliehoek and Diederik M. Roijers},
+    booktitle = {{MSDM} 2015: {P}roceedings of the AAMAS Workshop on Multi-Agent Sequential Decision Making in Uncertain Domains},
+    year =      2015,
+    month =     may
+}
+
+@incollection{van2012reinforcement,
+  title={Reinforcement Learning in Continuous State and Action Spaces},
+  author={Van Hasselt, Hado},
+  pages={207--251},
+  booktitle = {Reinforcement Learning: State-of-the-Art},
+   series = {Adaptation, Learning, and Optimization},
+   editor = {Wiering, Marco A. and Van Otterlo, Martijn},
+   volume = {12},
+   year = {2012}
+}
+
+@article{das1999solving,
+  title={Solving semi-{M}arkov decision problems using average reward reinforcement learning},
+  author={Das, Tapas K and Gosavi, Abhijit and Mahadevan, Sridhar and Marchalleck, Nicholas},
+  journal={Management Science},
+  volume={45},
+  number={4},
+  pages={560--574},
+  year={1999},
+}
+
+@inproceedings{brown2012multi,
+  title={Multi-objective optimization for security games},
+  author={Brown, Matthew and An, Bo and Kiekintveld, Christopher and Ord{\'o}{\~n}ez, Fernando and Tambe, Milind},
+  booktitle={AAMAS 2012: Proceedings of the 11th International Conference on Autonomous Agents and Multiagent Systems-Volume 2},
+  pages={863--870},
+  year={2012}
+}
+
+@inproceedings{liu2011bounding,
+  title={Bounding the Partition Function using {H}\"older's Inequality},
+  author={Liu, Qiang and Ihler, Alexander T},
+  booktitle={ICML 2011: Proceedings of the 28th International Conference on Machine Learning},
+  pages={849--856},
+  year={2011}
+}
+
+@inproceedings{ihler12a,
+   title = {Join-graph based cost-shifting schemes},
+   author = {Alexander T Ihler and Natalia Flerova and Rina Dechter and Lars Otten},
+   booktitle = {UAI 2012: Proceedings of the Twenty-Eighth Annual Conference on Uncertainty in Artificial Intelligence},
+   year = 2012,
+   pages = {397--406}
+}
+
+@article{wainwright2008graphical,
+  title={Graphical models, exponential families, and variational inference},
+  author={Wainwright, Martin J and Jordan, Michael I},
+  journal={Foundations and Trends in Machine Learning},
+  volume={1},
+  number={1-2},
+  pages={1--305},
+  year={2008},
+}
+
+@article{ong2010planning,
+  title={Planning under uncertainty for robotic tasks with mixed observability},
+  author={Ong, Sylvie C W and Png, Shao Wei and Hsu, David and Lee, Wee Sun},
+  journal={The International Journal of Robotics Research},
+  volume={29},
+  number={8},
+  pages={1053--1068},
+  year={2010},
+}
+
+@incollection{vlassis2012bayesian,
+  title={Bayesian reinforcement learning},
+  author={Vlassis, Nikos and Ghavamzadeh, Mohammad and Mannor, Shie and Poupart, Pascal},
+    booktitle = {Reinforcement Learning: State-of-the-Art},
+   series = {Adaptation, Learning, and Optimization},
+   editor = {Wiering, Marco A. and Van Otterlo, Martijn},
+   volume = {12},
+   year = {2012},
+  pages={359--386}
+}
+
+@inproceedings{keller2013trial,
+  title={Trial-Based Heuristic Tree Search for Finite Horizon {MDPs}},
+  author={Keller, Thomas and Helmert, Malte},
+  booktitle={ICAPS 2013: Proceedings of the Twenty-Third International Conference on Automated Planning and Scheduling},
+  year={2013},
+  pages={135--143}
+}
+
+@inproceedings{keller2012prost,
+  title={{PROST: Probabilistic Planning Based on UCT}},
+  author={Keller, Thomas and Eyerich, Patrick},
+  booktitle={ICAPS 2012: Proceedings of the Twenty-Second International Conference on Automated Planning and Scheduling},
+  year={2012},
+  pages={119--127}
+}
+
+@incollection{kocsis2006bandit,
+  title={Bandit based {M}onte-{C}arlo planning},
+  author={Kocsis, Levente and Szepesv{\'a}ri, Csaba},
+  booktitle={Machine Learning: ECML 2006},
+  pages={282--293},
+  year={2006}
+}
+
+@inproceedings{benabbou2015incremental,
+  title={Incremental Weight Elicitation for Multiobjective State Space Search},
+  author={Benabbou, Nawal and Perny, Patrice},
+  booktitle={AAAI 2015: Proceedings of the Twenty-Ninth AAAI Conference on Artificial Intelligence},
+  pages={1093--1099},
+  year={2015}
+}
+
+@book{sen1970collective,
+  title={Collective choice and social welfare},
+  author={Sen, Amartya Kumar},
+  year={1995},
+  note={Fourth impression},
+  address={Amsterdam, the Netherlands},
+}
+
+@phdthesis{roijersPhD, 
+ title={Multi-Objective Decision-Theoretic Planning},
+ author={Roijers, Diederik M.},
+ year ={2016},   
+ school={University of Amsterdam}
+}
+
+@inproceedings{chen2013combinatorial,
+  title={Combinatorial multi-armed bandit: General framework, results and applications},
+  author={Chen, W. and Wang, Y. and Yuan, Y.},
+  booktitle={Proceedings of the 30th international conference on machine learning},
+  pages={151--159},
+  year={2013}
+}
+
+@article{cesa2012combinatorial,
+  title={Combinatorial bandits},
+  author={Cesa-Bianchi, N. and Lugosi, G.},
+  journal={Journal of Computer and System Sciences},
+  volume={78},
+  number={5},
+  pages={1404--1422},
+  year={2012},
+}
+
+
+@article{gai2012combinatorial,
+  title={Combinatorial network optimization with unknown variables: Multi-armed bandits with linear rewards and individual observations},
+  author={Gai, Y. and Krishnamachari, B. and Jain, R.},
+  journal={IEEE/ACM Transactions on Networking (TON)},
+  volume={20},
+  number={5},
+  pages={1466--1478},
+  year={2012},
+}
+
+@article{bubeck2012regret,
+  title={Regret analysis of stochastic and nonstochastic multi-armed bandit problems},
+  author={Bubeck, S. and Cesa-Bianchi, N.},
+  journal={arXiv preprint:1204.5721},
+  year={2012}
+}
+
+@inproceedings{audibert2011minimax,
+  title={Minimax Policies for Combinatorial Prediction Games.},
+  author={Audibert, J.-Y. and Bubeck, S. and Lugosi, G.},
+  booktitle={COLT},
+  volume={19},
+  pages={107--132},
+  year={2011}
+}
+
+@article{chen2003best,
+  title={The best lower and upper bounds of harmonic sequence},
+  author={Chen, C.-P. and Qi, F.},
+  journal={RGMIA research report collection},
+  volume={6},
+  number={2},
+  year={2003},
+}
+
+@inproceedings{kok2003multi,
+  title={Multi-robot decision making using coordination graphs},
+  author={Kok, J. R. and Spaan, M. T. J. and Vlassis, N. and others},
+  booktitle={Proceedings of the 11th International Conference on Advanced Robotics, ICAR},
+  volume={3},
+  pages={1124--1129},
+  year={2003}
+}
+
+@inproceedings{claes2017decentralised,
+  title={Decentralised Online Planning for Multi-Robot Warehouse Commissioning},
+  author={Claes, D. and Oliehoek, F. and Baier, H. and Tuyls, K.},
+  booktitle={Proceedings of the 16th Conference on Autonomous Agents and MultiAgent Systems},
+  pages={492--500},
+  year={2017},
+  organization={International Foundation for Autonomous Agents and Multiagent Systems}
+}
+
+@inproceedings{wiering2000multi,
+  title={Multi-agent reinforcement learning for traffic light control},
+  author={Wiering, M.A.},
+  booktitle={Machine Learning: Proceedings of the Seventeenth International Conference (ICML'2000)},
+  pages={1151--1158},
+  year={2000}
+}
+
+@inproceedings{agrawal2012analysis,
+  title={Analysis of {T}hompson Sampling for the Multi-armed Bandit Problem.},
+  author={Agrawal, S. and Goyal, N.},
+  booktitle={COLT},
+  pages={39--1},
+  year={2012}
+}
+
+@inproceedings{scharpff16solving,
+    author =    {Scharpff, J. and Roijers, D. M. and  Oliehoek, F. A. and Spaan, M.T.J.  and de Weerdt, M. M.},
+    title =     {Solving Transition-Independent Multi-agent {MDP}s with Sparse Interactions},
+    booktitle = {AAAI16: Proceedings of the 30th AAAI Conference on Artificial Intelligence},
+    year =      2016
+}
+
+@article{auer2002finite,
+  title={Finite-time analysis of the multiarmed bandit problem},
+  author={Auer, P. and Cesa-Bianchi, N. and Fischer, P.},
+  journal={Machine learning},
+  volume={47},
+  number={2-3},
+  pages={235--256},
+  year={2002}
+}
+
+@article{vandijk2016,
+	author = {Van Dijk, M. T. and Wingerden, J. W. and Ashuri, T. and Li, Y. and Rotea, M.},
+	title = {Yaw-Misalignment and its Impact on Wind Turbine Loads and Wind Farm Power Output},
+	year = {2016},
+	journal = {Journal of Physics: {C}onference Series},
+	volume = {753},
+	number = {6}
+}
+
+@inproceedings{cite:scql,
+ author = {Kok, Jelle R. and Vlassis, Nikos},
+ title = {Sparse Cooperative Q-learning},
+ booktitle = {Proceedings of the Twenty-first International Conference on Machine Learning},
+ series = {ICML '04},
+ year = {2004},
+ isbn = {1-58113-838-5},
+ location = {Banff, Alberta, Canada},
+ pages = {61--},
+ url = {http://doi.acm.org/10.1145/1015330.1015410},
+ doi = {10.1145/1015330.1015410},
+ acmid = {1015410},
+ address = {New York, NY, USA},
+} 
+
+@article{cite:llr,
+ author = {Gai, Yi and Krishnamachari, Bhaskar and Jain, Rahul},
+ title = {Combinatorial Network Optimization with Unknown Variables: Multi-armed Bandits with Linear Rewards and Individual Observations},
+ journal = {IEEE/ACM Trans. Netw.},
+ issue_date = {October 2012},
+ volume = {20},
+ number = {5},
+ month = oct,
+ year = {2012},
+ pages = {1466--1478},
+ numpages = {13},
+ url = {http://dx.doi.org/10.1109/TNET.2011.2181864},
+ doi = {10.1109/TNET.2011.2181864},
+ acmid = {2428707},
+ address = {Piscataway, NJ, USA},
+ keywords = {combinatorial network optimization, multiarmed bandits (MABs), online learning},
+} 
+
+@inproceedings{DeHauwere:2010,
+ author = {De Hauwere, Y.-M. and Vrancx, P. and Now{\'e}, A.},
+ title = {Learning Multi-agent State Space Representations},
+ booktitle = {Proceedings of the 9th International Conference on Autonomous Agents and Multiagent Systems},
+ series = {AAMAS '10},
+ year = {2010},
+ pages = {715--722}
+} 
+
+@incollection{kapetanakis2005reinforcement,
+  title={Reinforcement learning of coordination in heterogeneous cooperative multi-agent systems},
+  author={Kapetanakis, S. and Kudenko, D.},
+  booktitle={Adaptive Agents and Multi-Agent Systems II},
+  pages={119--131},
+  year={2005},
+}
+
+@article{roijers2017multi,
+  title={Multi-objective decision making},
+  author={Roijers, D. M. and Whiteson, S.},
+  journal={Synthesis Lectures on Artificial Intelligence and Machine Learning},
+  volume={11},
+  number={1},
+  pages={1--129},
+  year={2017},
+}
+
+@inproceedings{radionetworks,
+ author = {Avner, O. and Mannor, S.},
+ title = {Concurrent Bandits and Cognitive Radio Networks},
+ booktitle = {Proceedings of the European Conference on Machine Learning and Knowledge Discovery in Databases - Volume 8724},
+ series = {ECML PKDD 2014},
+ year = {2014},
+ isbn = {978-3-662-44847-2},
+ location = {Nancy, France},
+ pages = {66--81},
+ numpages = {16},
+ url = {https://doi.org/10.1007/978-3-662-44848-9_5},
+ doi = {10.1007/978-3-662-44848-9_5},
+ acmid = {2731543},
+ address = {Berlin, Heidelberg},
+ keywords = {Bandits, Epsilon-greedy, Multi-user},
+}

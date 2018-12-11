@@ -1,0 +1,131 @@
+\section{Linear Regret Bound for Collaborative Multi-Agent Settings}
+\label{sec:regret}
+
+The efficiency of our method is achieved by exploiting localized structures within the global reward. If there are no such structures, then a worst-case regret of $O(A \log T)$ can be achieved by employing an upper-confidence bound (UCB) algorithm \cite{auer2002finite,auer2010ucb}.
+As $A$ grows exponentially with the number of agents, the global action space is simply too large to make this bound of practical use. However, we show that when the global reward can be decomposed into local reward functions over subsets of agents, the regret obtained when using our method becomes much smaller. In fact, when the local rewards all have the same range, the regret of our method becomes \emph{linear} in the number of agents.
+
+Assume there are $\rho$ subsets of agents, called \emph{groups}, and that there is a decomposition of the global reward $F(\mathbf{a}) = \sum^\rho_{e=1} f^e(\mathbf{a}^e)$ where $f^e(\mathbf{a}^e) \in \left[0, r_{\max}^e\right]$. W.l.o.g., let us also consider non-identical groups and that $\sum^\rho_{e=1} r_{\max}^e = 1$. The local function $f^e$ only depends on the actions of a group $\mathcal{D}^e$. We maintain the sample mean reward $\hat{\mu}^e_{t}(\mathbf{a}^e)$ and number of pulls $n^e_{t}(\mathbf{a}^e)$ for each local joint action $\mathbf{a}^e$ taken by group $\mathcal{D}^e$ at time $t$. Finally, we define the gap between the true expected rewards of the optimal action $\mathbf{a_*}$ and action $\mathbf{a}$ to be $\Delta(\mathbf{a}) = \mathbb{E}\left[F(\mathbf{a_*})\right] - \mathbb{E}\left[F(\mathbf{a})\right]$.
+
+\begin{theorem}
+If at each time $t$ we choose $\mathbf{a}_t$ such that
+\begin{equation*}
+\begin{split}
+\mathbf{a}_t &= \argmax_\mathbf{a} w_t(\mathbf{a})\\
+&= \argmax_\mathbf{a} \est_t(\mathbf{a}) + c_t(\mathbf{a})\,,
+\end{split}
+\end{equation*}
+with
+\begin{align*}
+\est_t(\mathbf{a})
+& = \sum_{e=1}^\rho \est^e_t(\mathbf{a}^e) \,, \\
+c_t(\mathbf{a}) & = \sqrt{ \frac{1}{2} \left(\sum_{e=1}^\rho n^e_t(\mathbf{a}^e)^{-1} (r_{\max}^e)^2 \right) \log ( t A )} \,,
+\end{align*}
+then the expected global regret is bounded by
+\[
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le\frac{2 N \sum_{e=1}^\rho (r_{\max}^e)^2 \log ( T A )}{\min_\mathbf{a} \Delta(\mathbf{a})^2} + \log T + 1 \,,
+\]
+where $N \equiv \sum_{e=1}^\rho \prod_{i \in \mathcal{D}^e} A_i$ is the total number of local joint actions and $A_i = |\mathcal{A}_i|$.
+\end{theorem}
+
+\begin{proof}
+Let $C_t(\mathbf{a})$ be the event that $\Delta(\mathbf{a}) > 2 c_t(\mathbf{a})$ holds and $\overline{C}_t(\mathbf{a})$ its negation. By the law of the excluded middle, we can then write
+\begin{align*}
+\mathbb{E}\left[\Delta(\mathbf{a}_t)\right] &=
+\mathbb{E}\left[ \Delta(\mathbf{a}_t) \md C_t(\mathbf{a}_t) \right] P(C_t(\mathbf{a}_t)) \\
+& +\mathbb{E}\left[ \Delta(\mathbf{a}_t) \md \overline{C}_t(\mathbf{a}_t) \right] P(\overline{C}_t(\mathbf{a}_t))
+\end{align*}
+which implies
+\begin{equation}
+\begin{split}
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le &\sum_{t=1}^T P(C_t(\mathbf{a}_t))
+\\&+ \mathbb{E}\left[\Delta(\mathbf{a}_t)\ |\ \overline{C}_t(\mathbf{a}_t)\right]\mathbb{E}\left[\ind{\overline{C}_t(\mathbf{a}_t)}\right]\nonumber
+\label{decomp}
+\end{split}
+\end{equation}
+where $\ind{\cdot}$ is the indicator function.
+%Note that the last equality holds, as all $r_{\max}^e$ are smaller than one, and therefore, the gap $\Delta(\cdot)$ between two true means as well.
+%
+We first look at all time steps on which $C_t(\mathbf{a}_t)$ holds.
+Specifically, we bound the probability that this event occurs. Using the law of total probability and chain rule, we can derive
+\begin{align}
+P(C_t(\mathbf{a}_t)) \le  \sum_{a \in \mathcal{A}} \prob{ \mathbf{a} = \mathbf{a}_t \md C_t(\mathbf{a}) } \label{eq:sumPC}
+\end{align}
+By definition, action $\mathbf{a}_t$ maximizes the upper bound $w_t(\cdot)$. Therefore,
+\begin{equation*}
+\begin{split}
+P(\mathbf{a} &= \mathbf{a}_t \mid C_t(\mathbf{a}))\\
+&= \prob{ w_t(\mathbf{a}) = w_t(\mathbf{a}_t)  \md C_t(\mathbf{a}) }\\
+&\le \prob{ w_t(\mathbf{a}) \ge w_t(\mathbf{a}_*)  \md C_t(\mathbf{a}) }\\
+& = \prob{ \hat{\mu}_t(\mathbf{a}) - \hat{\mu}_t(\mathbf{a}_*) \ge c_t(\mathbf{a}_*) - c_t(\mathbf{a}) \md C_t(\mathbf{a}) }\\
+&\le \text{exp}\left( -\frac{ 2 ( \Delta(\mathbf{a}) + c_t(\mathbf{a}_*) - c_t(\mathbf{a}) )^2 }{ \sum_{e=1}^\rho (r_{\max}^e)^2 \left( n^e_t(\mathbf{a}^e)^{-1} + n^e_t(\mathbf{a}^e_*)^{-1} \right) } \right)
+\end{split}
+\end{equation*}
+In the last step, we used Hoeffding's inequality. This is possible, as $\hat{\mu}_t(\mathbf{a})$ is a sum of i.i.d. random variables bounded within the interval $\left[0, \frac{r_{\max}^e}{n^e_t(\mathbf{a}^e)}\right]$. We now apply condition $C_t(\mathbf{a})$ such that $\Delta(\mathbf{a}) > 2 c_t(\mathbf{a})$ and derive
+\begin{align*}
+P(& \mathbf{a} = \mathbf{a}_t \mid C_t(\mathbf{a}) )\\
+& \le \text{exp}\left( -\frac{ 2 ( c_t(\mathbf{a}) + c_t(\mathbf{a}_*) )^2 }{ \sum_{e=1}^\rho (r_{\max}^e)^2 \left( n^e_t(\mathbf{a}^e)^{-1} + n^e_t(\mathbf{a}^e_*)^{-1} \right) } \right) \\
+& \le \text{exp}\left( -\frac{ 2 c_t(\mathbf{a})^2 + 2 c_t(\mathbf{a}_*)^2 }{ \sum_{e=1}^\rho (r_{\max}^e)^2 \left( n^e_t(\mathbf{a}^e)^{-1} + n^e_t(\mathbf{a}^e_*)^{-1} \right) } \right) \\
+& = \text{exp}\left( -\log( t A ) \right) \\
+&\le (tA)^{-1}
+\end{align*}
+Using \eqref{eq:sumPC}, we can conclude
+\begin{align}
+\sum^T_{t=1} P(C_t(\mathbf{a}_t)) &\le \sum_{t=1}^T (tA)^{-1}A \le \log T + 1 \label{eq:first_term}
+\end{align}
+where for the last step we used $\sum_{t=1}^T t^{-1} < \log T + \gamma + \frac{3}{6T+2} < \log T + 1$ \cite{chen2003best}, where $\gamma$ is Euler's constant.
+
+Now, we look at the time steps where $\overline{C}_t(\mathbf{a}_t)$ holds. Either $\mathbf{a}_t =
+\mathbf{a}_*$ and $\Delta(\mathbf{a}_t) = 0$, or
+\begin{align*}
+\Delta(\mathbf{a}_t) &\le 2 c_t(\mathbf{a}_t) \\
+\Delta(\mathbf{a}_t)^2 &\le 2 \log(t A) \sum_{e=1}^\rho (r_{\max}^e)^2(n^e_t(\mathbf{a}^e_t))^{-1} \\
+1 &\le \frac{2 \log(t A)}{\min_e n^e_t(\mathbf{a}^e_t)} \frac{\sum_{e=1}^\rho
+(r_{\max}^e)^2}{\min_{\mathbf{a} \neq \mathbf{a}_*}\Delta(\mathbf{a})^2}
+%\frac{\sum_{e=1}^\rho (r_{\max}^e)^2 }{\sum_{e=1}^\rho (r_{\max}^e)^2 n^e_t(\mathbf{a}^e_t)^{-1}} \le 2\frac{\sum_{e=1}^\rho (r_{\max}^e)^2 \log ( t A )}{\Delta(\mathbf{a}_t)^2}
+\end{align*}
+\begin{equation}
+\min_e n^e_t(\mathbf{a}^e_t) \le 2 \log(T A)\frac{\sum_{e=1}^\rho
+(r_{\max}^e)^2}{\min_{\mathbf{a} \neq \mathbf{a}_*}\Delta(\mathbf{a})^2} \label{lemma2proof}
+\end{equation}
+Note that as there are at most $N=\sum_{e=1}^\rho \prod_{i \in \mathcal{D}^e} A_i$ local joint actions, the left-hand side will
+increase every at most $N$ time steps. Since the right-hand side is fixed and does not depend on
+$t$, \eqref{lemma2proof} can only be true on at most $2 N \log ( T A )\sum_{e=1}^\rho
+(r_{\max}^e)^2 / \min_{\mathbf{a} \neq \mathbf{a}_*} \Delta(\mathbf{a})^2$ different time steps.
+This implies that
+\begin{align*}
+\sum_{t=1}^T &\mathbb{E}\left[\Delta(\mathbf{a}_t)\ |\ \overline{C}_t(\mathbf{a}_t)\right] \mathbb{E}\left[\ind{\overline{C}_t(\mathbf{a}_t)}\right]\\
+&\le \mathbb{E}\left[\sum_{t=1}^T
+\ind{\overline{C}_t(\mathbf{a}_t) \land \mathbf{a}_t \neq \mathbf{a}_*}\right] \\
+&\le
+\frac{2 N\log ( T A ) \sum_{e=1}^\rho (r_{\max}^e)^2 }{\min_{\mathbf{a} \neq\mathbf{a}_*} \Delta(\mathbf{a})^2}
+\end{align*}
+Together with \eqref{decomp} and \eqref{eq:first_term}, this implies
+\begin{align*}
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le \frac{2 N \log ( T A ) \sum_{e=1}^\rho (r_{\max}^e)^2}{\min_{\mathbf{a} \neq\mathbf{a}_*}\Delta(\mathbf{a})^2} + \log T + 1
+\end{align*}
+\end{proof}
+
+\begin{corollary}\label{cor1}
+If $A_i \le k$ for all agents $i$, and if $|\mathcal{D}^e| \le d$ for all groups $\mathcal{D}^e$, then
+\[
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le\frac{2\rho k^d \left( \log T + m \log k \right)}{\min_{\mathbf{a} \neq\mathbf{a}_*} \Delta(\mathbf{a})^2} + \log T + 1\,.
+\]
+\end{corollary}
+\begin{proof}
+$\sum_{e=1}^\rho r_{\max}^e = 1$ implies $\sum_{e=1}^\rho (r_{\max}^e)^2 \le 1$.
+Additionally, $\log A = \sum_{i=1}^m \log A_i \le m \log k$.
+Finally, $N = \sum_{e=1}^\rho \prod_{i \in \mathcal{D}^e} A_i \le \rho k^d$.
+\end{proof}
+
+The important thing to note is that the given regret bound is \emph{linear} in the number of agents $m$ and in the number of functions $\rho$, which implies --- since $\rho \le {m \choose d} < m^d$ --- that it is \emph{polynomial} in $m$, with degree at most $d+1$. This is a huge improvement over the naive `flattened' regret bound, which is \emph{exponential} in the number of agents.
+\begin{corollary}
+If, in addition to the assumptions in Corollary \ref{cor1}, each local function has the same range such that $r_{\max}^e = \rho^{-1}$, then
+\[
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le\frac{2k^d \left( \log T + m \log k \right)}{\min_{\mathbf{a} \neq\mathbf{a}_*} \Delta(\mathbf{a})^2} + \log T + 1\,.
+\]
+\end{corollary}
+\begin{proof}
+If $r_{\max}^e = \rho^{-1}$ for each $e$, then $\sum_{e=1}^\rho (r_{\max}^e)^2 = \rho^{-1}$ and therefore $N \sum_{e=1}^\rho (r_{\max}^e)^2 = k^d$.
+\end{proof}
+Note that this implies that under the assumption that each local function has the same range, 1) the regret no longer depends on $\rho$ and 2) the regret is \emph{linear} in the number of agents.
+

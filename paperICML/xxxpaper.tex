@@ -1,0 +1,476 @@
+%%%%%%%% ICML 2018 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2018} with \usepackage[nohyperref]{icml2018} above.
+\usepackage{hyperref}
+
+\usepackage{amsmath, amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{comment}
+\usepackage[round]{natbib}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{array}
+\usepackage{enumitem}
+\setlist{nolistsep}
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\est}{\hat{\mu}}
+\newcommand{\E}{\mathrm{e}}
+\newcommand{\ind}[1]{\mathcal{I}\!\left\{#1\right\}}
+\newcommand{\prob}[1]{P\left( #1 \right)}
+\newcommand{\md}{\,\middle|\,}
+
+\providecommand{\newdef}[2]{\newtheorem{#1}{#2}}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+%\theoremstyle{definition}
+%\theorembodyfont{\upshape}
+\newdef{definition}{Definition}
+\newdef{observation}{Observation}
+\newdef{example}{Example} %[section]
+\def\hado#1{\textcolor{RubineRed}{\textbf{Hado: ``#1''}}}
+
+% Images folders
+\graphicspath{{./res/}}
+
+% Use the following line for the initial blind version submitted for review:
+%\usepackage{icml2018}
+
+% If accepted, instead use the following line for the camera-ready submission:
+\usepackage[accepted]{icml2018}
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Learning to Coordinate with Coordination Graphs in Repeated Single-Stage Multi-Agent Decision Problems}
+
+\begin{document}
+
+\twocolumn[
+\icmltitle{Learning to Coordinate with Coordination Graphs\\ in Repeated Single-Stage Multi-Agent Decision Problems}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2018
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Eugenio Bargiacchi}{vub}
+\icmlauthor{Timothy Verstraeten}{vub}
+\icmlauthor{Diederik M.\ Roijers}{vub,vua}
+\icmlauthor{Ann Now\'e}{vub}
+\icmlauthor{Hado van Hasselt}{goo}
+\end{icmlauthorlist}
+
+\icmlaffiliation{vub}{Dept. of Computer Science, Vrije Universiteit Brussel, Brussels, Belgium}
+\icmlaffiliation{goo}{Google DeepMind, London, UK}
+\icmlaffiliation{vua}{Fac. of Science, Vrije Universiteit Amsterdam, The Netherlands}
+
+\icmlcorrespondingauthor{Eugenio Bargiacchi}{svalorzen@gmail.com}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Machine Learning, ICML}
+
+\vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+
+\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+%\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+\begin{abstract}
+Learning to coordinate between multiple agents is an important problem in many reinforcement
+learning problems. Key to learning to coordinate is exploiting loose couplings, i.e., conditional
+independences between agents. In this paper we study learning in repeated fully cooperative games,
+\emph{multi-agent multi-armed bandits (MAMABs)}, in which the expected rewards can be expressed as a
+coordination graph. We propose \emph{multi-agent upper confidence exploration (MAUCE)}, a new
+algorithm for MAMABs that exploits loose couplings, which enables us to prove a regret bound that is
+logarithmic in the number of arm pulls and only linear in the number of agents. We empirically
+compare MAUCE to sparse cooperative Q-learning, and a state-of-the-art combinatorial bandit
+approach, and show that it performs much better on a variety of settings, including learning control
+policies for wind farms.
+
+%This document provides a basic paper template and submission guidelines.
+%Abstracts must be a single paragraph, ideally between 4--6 sentences long.
+%Gross violations will trigger corrections at the camera-ready phase.
+\end{abstract}
+
+\section{Introduction}
+Many decision problems can be phrased as coordination problems of many artificial intelligent agents
+\cite{boutilier1996mmdp}. Examples include robot soccer \cite{kok2003multi}, warehouse commissioning
+\cite{claes2017decentralised}, and traffic light control \cite{wiering2000multi}.  We consider the
+cooperative case, where there is a single goal to be optimised. A naive approach could be to consider
+a super agent that decides on the actions of all agents involved, which could
+easily result in an action space which is prohibitively large.
+%
+However, many coordination tasks have \emph{loose couplings}. This means that the total reward to
+optimise can be decomposed into a sum of \emph{local rewards} that only depend on (possibly
+overlapping) subsets of agents.  Then, each agent's action can only directly affects the rewards of
+few small subsets of agents. Key to making coordination efficient is exploiting such loose
+couplings.
+
+%Given a coordination graph, algorithms such as \emph{variable elimination} \cite{Guestrin02,KokVlassis06} can be used to select an optimal joint action. However, while the structure of the graph is often (assumed to be) known, the values in the graph usually have to be learnt through interaction with an environment. This is called \emph{cooperative reinforcement learning}.
+%
+%A well-known algorithm for cooperative reinforcement learning is \emph{sparse cooperative Q-learning} \cite{KokVlassis06}. This algorithm builds on Q-learning, by factorising the Q-function using a coordination graph. In general, an exact factorization of the Q-function is not possible for sequential settings that have a (possibly also factorized) state \cite{scharpff16solving}, and sparse cooperative Q-learning only converges towards an approximate value-function. However, in repeated cooperative single-stage settings, i.e., \emph{multi-agent multi-armed bandits (MAMABs)} which we formalize in Section \ref{sec:bg}, the factorization is exact and algorithms like sparse cooperative Q-learning converge towards the true value function.
+
+For an example of such a coordination task, consider an autonomously controlled wind farm in which
+each agent represents a wind turbine that is able to adjust the alignment of its blades to the wind
+(see Section \ref{sec:wind}). Each turbine can maximize its own power output by aligning the
+blades exactly perpendicular to the wind, but doing so may hinder turbines that are behind
+it due to turbulence \cite{vandijk2016}. It should be possible to do better through coordination.
+However, considering the full joint action over all turbines leads to a high-dimensional
+action space, which would be hard to optimise. Instead, we can see that this problem is loosely coupled,
+by noting that the power output of each turbine only directly depends on a small subset of other
+turbines --- the turbines upwind within a certain distance. This means that the
+total output can be phrased as a sum of local rewards that depend on small
+subsets of agents.
+%For an example of a MAMAB, consider an autonomously controlled wind farm in which each wind turbine represents an agent that is able to adjust the alignment of its blades w.r.t. the wind (see Section \ref{sec:wind}). In this setting, each turbine could maximize its own power output by aligning the blades exactly perpendicular to the wind, but by doing so can also hinder turbines that are behind it due to turbulence, thus giving rise to the need for coordination. This leads to local rewards that depend on a subset of agents, i.e., the power output of each turbine depends on the turbines in front of it.
+
+
+In this paper, we formalize multi-agent multi-armed bandits (MAMABs) and investigate how to balance
+exploration and exploitation in the \emph{joint} action taken by the agents, such that the loss due
+to taking suboptimal joint actions during learning is bounded. Building on the \emph{upper
+confidence bound (UCB)} framework \cite{auer2002finite} for single-agent multi-armed bandits, we
+formulate a new algorithm that we call \emph{multi-agent upper confidence exploration (MAUCE)}
+(Section \ref{sec:algo}). MAUCE balances exploitation and exploration using local estimates and
+local upper confidence bounds.
+
+%\hado{I don't quite understand the following paragraph.  Could you try saying in }
+%While aggregating these to select a joint action, it is important for limiting the regret to keep these values separate until the final joint action can be computed. MAUCE therefore needs an action selection subroutine that can handle such separated exploration and exploitation objectives. Taking inspiration from the multi-objective literature \cite{roijers2015computing}, we define this subroutine, that we call \emph{upper confidence variable elimination (UCVE)}, in Section \ref{sec:ucve}.
+
+We prove in Section \ref{sec:regret} that MAUCE achieves a regret bound that depends on the
+\emph{harmonic mean} of the local upper confidence bounds, rather than their sum, as
+we would get by applying the combinatorial bandit framework
+\cite{cesa2012combinatorial,chen2013combinatorial}. This leads to a regret logarithmic in
+the number of arm-pulls and linear in the number of agents. In contrast, the naive approach of
+considering the full joint action is exponential in the number of agents. In Section
+\ref{sec:exp} we compare empirically the performance of MAUCE to other approaches from the
+literature, and show that it achieves much less regret in various settings, including wind farm
+control.
+
+
+%In this paper, we take a formal approach to MAMABs, to balance exploration and exploitation in the \emph{joint} actions taken by the agents, such that the loss due to taking suboptimal joint actions during learning is bounded. Building on results for single-agent multi-armed bandits and specifically the \emph{upper confidence bound (UCB)} framework \cite{auer2002finite}, we formulate a new algorithm that we call \emph{multi-agent upper confidence exploration (MAUCE)} in Section \ref{sec:algo}. MAUCE balances exploitation and exploration using local estimates and local upper confidence bounds. While aggregating these to select a joint action, it is important for limiting the regret to keep these values separate until the final joint action can be computed.
+
+%MAUCE therefore needs an action selection subroutine that can handle such separated exploration and exploitation objectives. Taking inspiration from the multi-objective literature \cite{roijers2015computing}, we define this subroutine, that we call \emph{upper confidence variable elimination (UCVE)}, in Section \ref{sec:ucve}. We prove in Section \ref{sec:regret} that MAUCE achieves a regret bound that depends on the \emph{harmonic mean} of the local upper confidence bounds, in contrast to e.g., the sum of local upper confidence bounds as we would get if we would apply the combinatorial bandit framework \cite{cesa2012combinatorial,chen2013combinatorial}. This leads to a regret that is logarithmic in the number of arm-pulls and {linear} in the number of agents. In Section \ref{sec:exp} we empirically compare the performance of MAUCE to sparse cooperative Q-learning and a combinatorial bandits approach, and show that it achieves much less regret, in various settings, including wind farm control.
+
+\section{Related Work}
+
+Multi-agent reinforcement learning and planning with loose couplings has mainly been studied in
+sequential problems \cite{Guestrin02,KokVlassis06,DeHauwere:2010,scharpff16solving}.  In such sequential settings
+however, the value function does not permit an exact factorization. Therefore, only in the planning
+setting \cite{scharpff16solving}, some guarantees can be provided. For learning \cite{KokVlassis06},
+the focus has been on empirical performance. In this paper, we focus on MAMAB, which permit an
+exact factorization of the value function.
+
+%\hado{I replaced the term `random variable' by `random reward'.  Please change back if this is wrong.}
+This work is related to combinatorial bandits \citep{bubeck2012regret, cesa2012combinatorial,
+gai2012combinatorial, chen2013combinatorial}, in which sets of arms can be pulled simultaneously.
+In our setting, these variables correspond to the different agents, and similarly to the
+combinatorial bandit framework, the action space grows exponentially with the size of the sets of
+rewards.
+We consider a specific variant, called the \emph{semi-bandit} problem \cite{audibert2011minimax}, in
+which local components of the global reward are observable. \citet{chen2013combinatorial} considered
+this variant and constructed an algorithm.  However, that algorithm assumes access to an $(\alpha,
+\beta)$-oracle that provides a joint action that outputs an $\alpha$ fraction of the optimal
+expected reward with a certain probability $\beta$.  Instead, we assume the availability of a
+coordination graph, which is often a more reasonable assumption in multi-agent settings.
+
+%\textcolor{blue}{Timo: Check whether this difference with Chen is correct. Hado also says we improve their regret with a factor $\rho$, while they improve ours with a factor $\Delta(\cdot)$, but I don't think we should highlight these small differences.}
+%\hado{Yes, checking the difference with Chen, and especially their reliance on the oracle, seems important.  I slightly rephrased, but not sure it is 100\% accurate.}
+
+
+\section{Background}\label{sec:bg}
+Before introducing our new algorithm, we first need to define our learning problem. This problem, the multi-agent multi-armed bandit, is a repeated fully cooperative multi-agent game. We first define the single-agent version of our setting, and then add the multi-agent elements. The single-agent version of our setting is commonly known as the \emph{multi-armed bandit (MAB)}:
+\begin{definition}
+A single-agent multi-armed bandit (MAB) \cite{thompson1933likelihood} is a tuple $\langle \mathcal{A},F\rangle$ where
+\begin{itemize}
+\item $\mathcal{A}$ is a set of actions or arms, and
+\item $F(a)$, called the reward function, is a random function taking an arm,  $a \in \mathcal{A}$, as input. Specifically, for each $a \in \mathcal{A}$, $F(a)$ is a random variable associated with a probability distribution $P_a : \mathbb{R} \rightarrow [0,1] $ over real-valued rewards $r$.
+\end{itemize}
+We refer to the mean reward of an arm as $\mu_a = \mathbb{E}_{P_a}[r] = \int_{-\infty}^{\infty} r P_a(r) dr$, and to the optimal reward as {the mean reward of the best arm} $\mu^* = \max_a \mu_a$. % and to the expected regret of pulling an arm, $a$, once as $\Delta_a = \mu^* - \mu_a$.
+\end{definition}
+The goal of an agent interacting with a MAB is to minimize the expected regret.
+\begin{definition}
+The {expected} cumulative regret of pulling a sequence of arms for timestep $t=1$  to the {horizon} $T$ (following the definition of \citeauthor{agrawal2012analysis}, \citeyear{agrawal2012analysis}), is
+\[
+\mathbb{E}\left[ \sum_{t=1}^{T} \mu^* - \mu_{a(t)}\right], % = \sum_a \Delta_{a} ~\mathbb{E}[n_a(T)],
+\]
+where $a(t)$ is the arm pulled at time $t$, and $n_a(t)$ is the number of times arm $a$ is pulled until timestep $t$.
+\end{definition}
+In a \emph{multi-agent multi-armed bandit (MAMAB)} there are multiple agents, and the rewards are factored:
+\begin{definition}
+A multi-agent multi-armed bandit (MAB) is a tuple $\langle \mathcal{A},\mathcal{D}, F\rangle$ where
+\begin{itemize}
+\item $\mathcal{D}$ is the set of $m$ enumerated agents,
+\item $\mathcal{A} = \mathcal{A}_1 \times \dots \times \mathcal{A} _{m}$ is a set of joint actions, which is the Cartesian product of the sets of individual actions, $\mathcal{A}_i$, for each of the $m$ agents in $\mathcal{D}$, and
+\item $F({\bf a})$, called the global reward function, is a random function taking a joint action, ${\bf a} \in \mathcal{A}$, as input, but with added structure.  Specifically, there are $\rho$ possibly overlapping subsets of agents, and the global reward is decomposed into $\rho$ local noisy reward functions: $F(\mathbf{a}) = \sum^\rho_{e=1} f^e(\mathbf{a}^e)$ where $f^e(\mathbf{a}^e) \in \left[0, r_{\max}^e\right]$. A local function $f^e$ only depends on the joint action $\mathbf{a}^e$ of the subset $\mathcal{D}^e$ of agents.
+\end{itemize}
+We refer to the mean reward of a joint action as $\mu_{\bf a}$, which in turn is factorized into the same local reward components as $F({\bf a})$: $\mu_{\bf a} = \sum^\rho_{e=1} \mu(\mathbf{a}^e)$. For simplicity, we refer to an agent $i$ by its index.
+\end{definition}
+$\mu_{\bf a}$ thus maps joint actions to real-valued expected rewards via real-valued local expected rewards, i.e., it is a \emph{coordination graph (CoG)} \cite{Guestrin02,KokVlassis06}. When $\mu_{\bf a}$ and all its components are known, it can be used to extract the optimal reward $\mu^*$. A naive way to do so would be to \emph{`flatten'} the CoG, i.e., enumerate all joint actions, compute their associated mean reward, and then maximize. However, this is typically infeasible, as the number of joint actions, $A \equiv |\mathcal{A}|$, is exponential in the number of agents. For instance, if each agent has two actions, then $A = 2^m$. Therefore, extracting the optimal reward and associated actions is typically done via algorithms like \emph{variable elimination (VE)}.
+%\hado{When an agent is `eliminated', its action is fixed?  If so, how?}
+In VE, agents are eliminated from the CoG sequentially, thus solving the maximization problem as a series of \emph{local subproblems}: one per agent. When an agent is eliminated, VE computes its best responses to all possible actions of its neighbors, i.e., the agents with which it shares a local reward function. The local values of these best responses are then used to create a new local mean reward, replacing those to which the eliminated agent was connected. This exploits the graphical structure resulting from the factorization, and the size of the local subproblems depends only on the \emph{induced width}, i.e., how many agents the eliminated agent shares a local reward function with at the time of its elimination. When the coordination graph is sparse, i.e., agents are only involved in a small number of local reward functions, the induced width is typically much smaller than the size of the joint action space, making the maximization problem tractable.
+
+When we are not simply maximizing over the joint actions to extract the optimal reward, but also need to explore to learn what the values of the mean rewards are, the situation becomes more complex. Again, we could `flatten' the MAMAB by treating each joint action as a separate arm in a single-agent MAB, but this quickly leads to too many arms to be able to learn effectively with popular algorithms such as UCB \cite{auer2002finite} of which the regret bounds depend on the number of arms. Furthermore, just adding the standard exploration bonuses to each of the local mean rewards leads to over-exploration, as we will show experimentally in Section \ref{sec:exp}. Instead, we propose to treat exploration and exploitation as separate objectives during a VE-like scheme, and taking inspiration from the multi-objective literature \cite{roijers2015computing}, define a new VE-like subroutine, that allows us to define a MAUCE (Section \ref{sec:algo}) for which we can prove a much tighter regret-bound.
+
+\section{Multi-Agent Upper Confidence Exploration}\label{sec:algo}
+In this section we propose our new algorithm for MAMABs: \emph{Multi-Agent Upper Confidence Exploration (MAUCE)} (Algorithm \ref{alg:mauce}).
+\begin{algorithm}[t]
+   \caption{MAUCE}
+   \label{alg:mauce}
+\begin{algorithmic}[1]
+   \STATE {\bfseries Input:} An MAMAB with a factorized reward function, $F(\mathbf{a}) = \sum^\rho_{e=1} f^e(\mathbf{a}^e)$, a time horizon $T$
+   \STATE Initialize $\hat{\mu}^e (\mathbf{a}^e)$ and $n^e(\mathbf{a}^e)$ to zero.
+   \FOR{$i=1$ {\bfseries to} $T$}
+   \STATE ${\bf a}_t = \argmax_{\bf a}  \est_t(\mathbf{a}) + c_t(\mathbf{a})\,$
+   		where, \\ ~~~~~~$\est^e_t(\mathbf{a}) = \sum_{e=1}^\rho \est_t(\mathbf{a}^e) \,$ and, \\
+~~~~~~$c_t(\mathbf{a}) = \sqrt{ \frac{1}{2} \left(\sum_{e=1}^\rho n^e_t(\mathbf{a}^e)^{-1} (r_{\max}^e)^2 \right) \log ( t A )} $
+  \STATE $r_t\!=\!\sum_{e=1}^\rho\! r^e_t(\mathbf{a}^e)$ (execute $\bf a$, obtain local rewards)
+   \STATE Update $\hat{\mu}^e_t (\mathbf{a}^e)$ using $r^e_t(\mathbf{a}^e)$  for all $\mathbf{a}^e \subset \mathbf{a}_t$
+  \STATE Increment $n^e_t(\mathbf{a}^e)$ by $1$ for all $\mathbf{a}^e \subset \mathbf{a}_t$
+   \ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+MAUCE executes a joint action at every timestep that maximizes the estimated mean reward for a given factorization of the reward function, $\est(\mathbf{a})$, plus an exploration bonus, $c_t(\mathbf{a})$,  that is computed using the same factorization. To do so, it keeps mean estimates of local rewards $\hat{\mu}^e(\mathbf{a}^e)$, and local counts $n^e_t(\mathbf{a}^e)$ for each subset of agents. These local estimates depend only on the subset of actions $\mathbf{a}^e \subset \mathbf{a}$ for this group of agents $\mathcal{D}^e \subset \mathcal{D}$.
+Not all joint actions have to be selected often, or even at all.  Note that the counts
+$n^e_t(\mathbf{a}^e)$ used to compute the bonus for an action $\mathbf{a}$ can change over time,
+even if the joint action $\mathbf{a}$ has never been selected, because MAUCE observes and uses the
+local rewards, $r^e_t(\mathbf{a}^e)$.  This enables the algorithm to exploit the graphical structure
+to compute tighter exploration bonuses while guaranteeing a tight regret bound. Despite not
+guaranteeing to explore all joint actions, the algorithm achieves guaranteed logarithmic regret. The
+proof for this regret bound is given in Section \ref{sec:regret}.
+
+Besides the local counts, the exploration bonus also depends on the maximum value of the local rewards $r_{\max}^e$, the time index $t$, and $A$. We note that $A$ is exponential in the number of agents. %\hado{Isn't $A$ exponential in the number of agents?}
+%
+Contrary to single-agent MABs, it is not trivial to maximize over $\est(\mathbf{a}) + c_t(\mathbf{a})$, as we need to maximize over a $A$ efficiently, and $c_t(\mathbf{a})$ is a non-linear function in the local counts $n^e_t(\mathbf{a}^e)$. Hence, MAUCE requires a special algorithm to perform this maximization.
+
+\subsection{Maximizing $\est(\mathbf{a}) + c(\mathbf{a})$}\label{sec:ucve}
+ We observe that we can express the estimated mean as the sum of local estimated means, and that $c_t(\mathbf{a})$ can be expressed as a function over the inverse counts: $y(\sum_{e=1}^\rho n^e_t(\mathbf{a}^e)^{-1} (r_{\max}^e)^2)$. Hence, when we write down the local estimates as two-element vectors: an estimated mean component and a weighted inverse counts component,
+\begin{equation}\label{eq:vectordef}
+ {\bf v}^e({\bf a}^e) =   (\est^e(\mathbf{a}^e), n^e_t(\mathbf{a}^e)^{-1} (r_{\max}^e)^2),
+\end{equation}
+we can express the mean plus exploration bonus as a function applied to the sum of these vectors:
+\begin{equation}\label{eq:zfunction}
+ z_t( {\bf v}({\bf a})) = \est(\mathbf{a}) + c_t(\mathbf{a}) = {\bf v}[1] + \sqrt{ \frac{1}{2}  {\bf v}[2] \log ( t A )},
+\end{equation}
+where
+\begin{equation}\label{eq:vectorsum}
+{\bf v}({\bf a}) = \sum^\rho_{e=1}  {\bf v}^e({\bf a}^e) .
+\end{equation}
+Vector formulations of reward, as those of Equations \ref{eq:vectordef}--\ref{eq:vectorsum}, are
+often used in the multi-objective decision making literature \cite{roijers2017multi}. Consider
+\emph{multi-objective variable elimination (MOVE)} \cite{Rollon06MOBE,roijers2015computing}, a
+multi-objective framework based on variable elimination that is able to handle vectors. Instead of single best responses for eliminated agents, MOVE produces sets of vectors that are possibly optimal as intermediate results. At each agent elimination, MOVE computes all possible (local) value vectors for the subproblem of eliminating the agent $i$, and \emph{prunes} away those that are locally dominated. After MOVE eliminates the last agent it outputs a possibly very large set of possibly optimal vectors, e.g., a Pareto front or convex coverage set.
+
+In contrast to MOVE, we only want to output a single vector, i.e., the one that maximizes $z_t$
+(Equation \ref{eq:zfunction}). To do this we tighten MOVE's simple domination pruning by introducing
+lower and upper bounds on the exploration part of the vector. This results in an algorithm in which
+the number of vectors in the intermediate solution sets steeply decreases in the last agent
+eliminations (in contrast to MOVE, in which the intermediate sets typically continue to grow in
+size).  We call this algorithm  \emph{upper confidence variable elimination (UCVE)}.
+
+First, we define the input of UCVE. Specifically, to be able to work with
+\emph{sets} of vectors as intermediate results, we first reformulate the problem of finding the
+optimal joint action in these terms. Specifically, we define the input to UCVE as a set
+$\mathcal{F}$ of \emph{local upper confidence vector set functions (UCVSFs)}.
+%
+For each $f^e$ of $F({\bf a})$, $\mathcal{F}$ contains an identically scoped UCVSF $u^e$.
+Each $u^e$ initially contains a singleton set, $u^e({\bf a}^e) = \{ {\bf v}^e({\bf a}^e) \}$,
+where ${\bf v}^e({\bf a}^e)$ is defined as in Equation \ref{eq:vectordef}.
+Eliminating an agent $i$, is performed by replacing all $u^e({\bf a}^e)$ which have $i$ in scope,
+i.e., $i \in \mathcal{D}^e$, by a new function that incorporates the possibly optimal responses of
+$i$. These possibly optimal responses are again vectors in the form of Equation \ref{eq:vectordef}.
+%\begin{algorithm}[h]
+%\textit{Input :} A set of local upper confidence vector set functions $\mathcal{F}$ and an elimination order $\tt q$ (a queue with all agents)\newline
+% \textit {Output :} An optimal joint action, $\bf a^*$\\\
+% \vspace{-2mm}
+%\hrule
+%\vspace{2mm}
+%\begin{algorithmic}[1]
+%\WHILE{$\tt q$ is not empty \label{ln:main}}
+%	\STATE $i \leftarrow {\tt q.dequeue}() $
+%	%\STATE $ \mathcal{F} \leftarrow \mathtt{eliminate}(\mathcal{F}, i)$
+%	\STATE $ne(i) \leftarrow$ the set of neighboring agents of $i$
+%	\STATE $\mathcal{F}_i \leftarrow$ the subset of UCVFs in $\mathcal{F}$ that have $i$ in scope
+%	\STATE $x_u,~x_l \leftarrow$ compute upper and lower bounds on the exploration part of the vectors for the remaining factors in $\mathcal{F}\setminus \mathcal{F}_i$
+%	\STATE $u^{new}(\mathbf{a}_{ne(i)})$ $\leftarrow$ a new UCVF\label{ln:fny}
+%	%\STATE $\displaystyle x_u \leftarrow \sum_{u^e \in \mathcal{F} \setminus\mathcal{F}_i} \left(\max_{{\bf a}^e \in \mathcal{A}^e} \max_{{\bf v}\in u^e({\bf a}^e)} {\bf v}[2] \right)$
+%	%\STATE $\displaystyle x_l \leftarrow \sum_{u^e \in \mathcal{F} \setminus\mathcal{F}_i} \left(\min_{{\bf a}^e \in \mathcal{A}^e} \min_{{\bf v}\in u^e({\bf a}^e)} {\bf v}[2] \right)$
+%	\FORALL{$~~~~\mathbf{a}_{ne(i)} \in \mathcal{A}_{ne(i)}~~~~$}
+%%\STATE bla
+%%\begin{comment}
+%		\STATE $\displaystyle\mathcal{V} \leftarrow \bigcup_{a_i\in\mathcal{A}_i} \bigoplus_{u^e\in \mathcal{F}_i} u^e(\textcolor{blue}{\mathbf{a}_{ne(i)} \times \{a_i\}})$
+%		\STATE $\!u^{new}({\bf a}_{ne(i)})\!\!\leftarrow\!\!{\tt prune}(\mathcal{V},  x_u, x_l)$ \label{ln:themagic}
+%%\end{comment}
+%	\ENDFOR
+%	\STATE $ \mathcal{F} \leftarrow \mathcal{F} \setminus \mathcal{F}_i \cup \{ u^{new} \} $
+%\ENDWHILE \label{ln:elim}
+%\STATE $ u \leftarrow$ retrieve final factor from $\mathcal{F} $ \label{ln:retr}
+%\STATE {\bf return} {the optimal joint action from $u$}
+%\end{algorithmic}
+%\caption{$\mathtt{UCVE}(\mathcal{\mathcal{F}})$}
+%\label{alg:UCVE}
+%\end{algorithm}
+\begin{algorithm}[h]
+\textit{Input :} A set of local upper confidence vector set functions $\mathcal{F}$ and an elimination order $\tt q$ (a queue with all agents)\newline
+ \textit {Output :} An optimal joint action, $\bf a^*$\\\
+ \vspace{-2mm}
+\hrule
+\vspace{2mm}
+\begin{algorithmic}[1]
+\WHILE{$\tt q$ is not empty \label{ln:main}}
+	\STATE $i \leftarrow {\tt q.dequeue}() $
+	%\STATE $ \mathcal{F} \leftarrow \mathtt{eliminate}(\mathcal{F}, i)$
+	\STATE $\mathcal{F}_i \leftarrow$ the subset of UCVSFs in $\mathcal{F}$ that have $i$ in scope
+	\STATE $x_u,~x_l \leftarrow$ compute upper and lower bounds on the exploration part of the vectors for the remaining factors in $\mathcal{F}\setminus \mathcal{F}_i$
+	\STATE $u^{new}(\cdot)$ $\leftarrow$ a new UCVSF\label{ln:fny}
+	%\STATE $\displaystyle x_u \leftarrow \sum_{u^e \in \mathcal{F} \setminus\mathcal{F}_i} \left(\max_{{\bf a}^e \in \mathcal{A}^e} \max_{{\bf v}\in u^e({\bf a}^e)} {\bf v}[2] \right)$
+	%\STATE $\displaystyle x_l \leftarrow \sum_{u^e \in \mathcal{F} \setminus\mathcal{F}_i} \left(\min_{{\bf a}^e \in \mathcal{A}^e} \min_{{\bf v}\in u^e({\bf a}^e)} {\bf v}[2] \right)$
+	\FORALL{$~~~~\mathbf{a}^e_{-i} \in \mathcal{A}_{D^e \setminus \{i\}}~~~~$}
+%\STATE bla
+%\begin{comment}
+		\STATE $\displaystyle\mathcal{V} \leftarrow \bigcup_{a_i\in\mathcal{A}_i} \bigoplus_{u^e\in \mathcal{F}_i} u^e(\mathbf{a}^e_{-i} \times \{a_i\})$
+		\STATE $\!u^{new}({\bf a}^e_{-i})\!\!\leftarrow\!\!{\tt prune}(\mathcal{V},  x_u, x_l)$ \label{ln:themagic}
+%\end{comment}
+	\ENDFOR
+	\STATE $ \mathcal{F} \leftarrow \mathcal{F} \setminus \mathcal{F}_i \cup \{ u^{new} \} $
+\ENDWHILE \label{ln:elim}
+\STATE $ u \leftarrow$ retrieve final factor from $\mathcal{F} $ \label{ln:retr}
+\STATE {\bf return} {the optimal joint action from $u$}
+\end{algorithmic}
+\caption{$\mathtt{UCVE}(\mathcal{\mathcal{F}})$}
+\label{alg:UCVE}
+\end{algorithm}
+
+UCVE is provided in Algorithm \ref{alg:UCVE}. Note that we only describe what is traditionally known
+as the \emph{forward} pass of the variable elimination scheme. This is because to retrieve the
+optimal joint action, we make use of the tagging scheme of MOVE \cite{roijers2015computing}, where
+vectors are tagged with the appropriate action of an agent during its elimination. %For details on the tagging, please refer to \cite{roijers2015computing}.
+
+UCVE eliminates all agents in a predetermined order, $\tt q$, in the main loop (line 1--11). On line 2 the next agent $i$ is popped off the queue, and on line 3 the factors that have $i$ in scope, $\mathcal{F}_i$ are collected. The functions in $\mathcal{F}_i$ will be replaced in $\mathcal{F}$ by a new UCVSF, $u^{new}$, incorporating the possible best responses to every possible local joint action of the neighbors of $i$. This new UCVSF has all the neighboring agents $\mathcal{D}^e \setminus \{i\}$ of agent $i$ in scope.
+
+First, all possible vectors $\mathcal{V}$ that can be made with the UCVSFs in $\mathcal{F}_i$ are computed (on line 7), across all actions of $i$, for a given ${\bf a}^e_{-i}$:
+\[\mathcal{V} = \bigcup_{a_i\in\mathcal{A}_i} \bigoplus_{u^e\in \mathcal{F}_i} u^e(\mathbf{a}^e_{-i} \times \{a_i\}),
+\]
+where $\mathcal{A}_i$ is the action space of agent $i$, and the cross-sum operator $A \oplus B$ is defined as $A \oplus B = \{ {\bf a} + {\bf b} : {\bf a}\in A \wedge {\bf b} \in B\}$.  Note that the resulting actions always include the appropriate actions $a_i$ (which is under the union) and the appropriate actions from ${\bf a}^e_{-i}$.  After $\mathcal{V}$ is computed, the vectors in $\mathcal{V}$ that cannot lead to an optimal joint action need to be pruned. 
+
+Each vector in $\mathcal{V}$ consists of an estimated mean and a weighted inverse counts part that
+will lead to the exploration bonus. Because the weighted inverse counts  cannot be linearly added to
+the estimated mean, we cannot a priori tell whether a vector ${\bf v} \in \mathcal{V}$ is better
+than  another vector ${\bf v}' \in \mathcal{V}$ when ${\bf v}[1]>{\bf v}'[1]$ but ${\bf v}[2]<{\bf
+v}'[2]$. We thus define a pruning operator that satisfies the two conditions necessary for
+correctness in a multi-objective variable elimination-scheme \cite{roijersPhD}, i.e., (1) no excess
+values are kept, and (2) no unnecessary values are returned after the last agent elimination.
+We compute an upper and a lower bound on the exploration bonus for the remaining
+functions in $\mathcal{F} \setminus \mathcal{F}_i$, using the sums of the maximum, resp.\ minimum,
+values for the exploration part,
+$x_u = \sum_{u^e \in \mathcal{F} \setminus \mathcal{F}_i} \max_{{\bf a}^e} \max_{{\bf v}\in u^e({\bf a}^e)} {\bf v}[2]$
+and
+$x_l = \sum_{u^e \in \mathcal{F} \setminus \mathcal{F}_i} \min_{{\bf a}^e} \min_{{\bf v}\in u^e({\bf a}^e)} {\bf v}[2]$.
+Specifically, a vector ${\bf v} \in \mathcal{V}$ cannot contribute to the optimal value if there is another vector ${\bf v}' \in \mathcal{V}$ such that
+\[
+	{\bf v}[1]\!+\!\sqrt{\!\frac{1}{2}  (\!{\bf v}[2]\!+\!x_u) \log ( t A )}\!\! <\!\! {\bf v}'[1]\!+\! \sqrt{\!\frac{1}{2}  (\!{\bf v}'[2]\!+\!x_l) \log ( t A )}
+	\]
+Hence, $\tt prune$ removes those candidate local upper confidence vectors that cannot contribute to finding the maximal mean plus exploration bonus. This immediately satisfies correctness condition (1), as it follows from the definition of upper and lower bounds.
+
+% according to the this condition:
+%\[
+%{\tt prune}(\mathcal{V}, x_u, x_l) =  \{ {\bf v} : {\bf v} \in \mathcal{V} \wedge \neg\exists ({\bf v}' \in \mathcal{V}) \]
+%\[
+%{\bf v}[1]\!+\!\sqrt{\!\frac{1}{2}  (\!{\bf v}[2]\!+\!x_u) \log ( t A )}\!\! <
+%\]
+%\[
+%{\bf v}'[1]\!+\! \sqrt{\!\frac{1}{2}  (\!{\bf v}'[2]\!+\!x_l) \log ( t A )} \}.
+%\]
+
+After all agents have been eliminated, there is only one UCVSF left, containing a single local upper
+confidence vector. UCVE retrieves the optimal vector--- which maximizes the $\est(\mathbf{a}) + c_t(\mathbf{a})$ ---and the associated joint action, ${\bf a}_t$, from the final UCVSF, satisfying correctness condition 2. We thus have defined an efficient algorithm that correctly outputs the joint action that maximizes $\est(\mathbf{a}) + c_t(\mathbf{a})$, and can therefore be used to select joint actions inside of MAUCE.
+
+\input{sections/proof.tex}
+
+\input{sections/experiments.tex}
+
+\section{Conclusion}
+In this paper, we proposed the \emph{multi-agent upper confidence exploration (MAUCE)} algorithm for
+\emph{multi-agent multi-armed bandits (MAMABs)}. While learning, MAUCE leverages the graphical
+properties of the MAMAB by treating as separate objectives both exploration, expressed as a function
+of the sum over weighted inverse local counts, and exploitation, i.e., the sum over estimated mean
+local rewards. Via a subroutine, \emph{upper confidence variable elimination (UCVE)}, that can
+handle these objectives, MAUCE selects the action that best balances exploration  and exploitation
+according to the joint overall mean reward plus (upper confidence) exploration bound.  We have
+proven a regret bound for MAUCE that is only linear in the number of agents, rather than
+exponential, as it would be if we were to flatten the MAMAB to a single-agent MAB. Furthermore, the
+regret bound is logarithmic in the number of arm pulls.  We compared MAUCE empirically to
+state-of-the-art algorithms in multi-agent reinforcement learning and combinatorial bandits, and
+have shown that MAUCE achieves much lower empirical regret than these approaches.
+
+We note that the range parameters $r^e_{max}$ for MAUCE, which represent the difference between the maximum and minimum possible reward for each local joint action, can be difficult to guess in advance when the problem is not exactly known, as in the Wind Farm experiments. One way to mitigate this, could be to estimate them from the coordination graph of expected mean rewards learnt while running the algorithm, rather than running preliminary experiments as we did for the Wind Farm. We will test this in future work.
+Furthermore, we aim to build on MAUCE to achieve quality guarantees for reinforcement learning in multi-agent MDPs. %, in addition to the bounds for MAMABs that we have proven in this paper. 
+
+\subsection*{Acknowledgements}
+The first author was supported by Flanders Innovation \& Entrepreneurship  (VLAIO),  SBO  project  140047:   Stable  MultI-agent
+LEarnIng for neTworks (SMILE-IT), second author was supported by an FWO PhD grant (Fonds Wetenschappelijk Onderzoek - Vlaanderen), third author was a Postdoctoral Fellow with the FWO (grant \#12J0617N). 
+
+\bibliography{dmrThesis}
+\bibliographystyle{icml2018}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DELETE THIS PART. DO NOT PLACE CONTENT AFTER THE REFERENCES!
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\appendix
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was created
+% by Iain Murray in 2018. It was modified from a version from Dan Roy in
+% 2017, which was based on a version from Lise Getoor and Tobias
+% Scheffer, which was slightly modified from the 2010 version by
+% Thorsten Joachims & Johannes Fuernkranz, slightly modified from the
+% 2009 version by Kiri Wagstaff and Sam Roweis's 2008 version, which is
+% slightly modified from Prasad Tadepalli's 2007 version which is a
+% lightly changed version of the previous year's version by Andrew
+% Moore, which was in turn edited from those of Kristian Kersting and
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.

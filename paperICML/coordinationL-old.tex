@@ -1,0 +1,431 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2016 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2016,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass{article}
+
+% use Times
+\usepackage{times}
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+
+\usepackage{subfigure} 
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{wrapfig}
+\usepackage{comment}
+\usepackage{xcolor}
+
+% For citations
+\usepackage{natbib}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+
+% As of 2011, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2016} with
+% \usepackage[nohyperref]{icml2016} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+%\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+\usepackage{icml2016} 
+
+%\usepackage[ruled,vlined]{algorithm2e}
+
+% Employ this version of the ``usepackage'' statement after the paper has
+% been accepted, when creating the final version.  This will set the
+% note in the first column to ``Proceedings of the...''
+%\usepackage[accepted]{icml2016}
+
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\est}{\hat{\mu}}
+\newcommand{\E}{\mathrm{e}}
+\newcommand{\ind}[1]{\mathcal{I}\!\left\{#1\right\}}
+\newcommand{\prob}[1]{P\left( #1 \right)}
+\newcommand{\md}{\,\middle|\,}
+\newcommand{\algname}{XXXXXX\ }
+\newcommand{\algab}{XXX\ }
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+
+\newcommand{\hvh}[1]{\textcolor{red}{\bf HvH: #1}}
+\newcommand{\dmr}[1]{\textcolor{purple}{\bf DMR: #1}}
+\newcommand{\eb}[1]{\textcolor{pink}{\bf EB: #1}}
+\newcommand{\changed}[1]{\textcolor{blue}{#1}}
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Learning to Coordinate with Graphical Bandits}
+
+\begin{document} 
+
+\twocolumn[
+\icmltitle{Learning to Coordinate with Graphical Bandits}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2016
+% package.
+\icmlauthor{Blind Review}{blind@review.edu}
+\icmladdress{Blinded Address}
+\icmlauthor{Blind Review}{blind@review.edu}
+\icmladdress{Blinded Address}
+
+% You may provide any keywords that you 
+% find helpful for describing your paper; these are used to populate 
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Reinforcement Learning, Coordination Graphs, Bandits}
+
+\vskip 0.3in
+]
+
+\begin{abstract} 
+\dmr{TODO}
+\end{abstract} 
+
+\section{Introduction}
+\label{sec:intro}
+\dmr{todo: find a good example to introduce problem}
+
+\dmr{todo: explain why this is a learning problem, and that that's exploitable intuitively}
+
+\dmr{todo: explain graphical structure, and that that's exploitable intuitively}
+
+\dmr{todo: mention coordination graphs and that learning in coordination graphs is a new problem}
+
+We make the following contributions:
+\begin{itemize}
+\item We devise a novel rule for joint action selection for reinforcement learning in coordination graphs. This rule assigns a value consisting of the expected reward and an exploration bonus based on the (weighted) harmonic means of the counts of \emph{local} joint actions. We prove (Section \ref{sec:mainalg}) that if we use this rule to pick the joint action at every timestep we get a regret bound that is much tighter than that of competing state-of-the-art algorithms (discussed briefly in Section \ref{sec:relwork}). 
+\item Because computing the joint action selection rule is non-trivial, we propose a separate algorithm for this (Section \ref{sec:selectalg}).
+\item Together, the rule and the action selection algorithm form our new algorithm \algname\!. We empirically compare our \algname to existing methods (Section \ref{sec:exp}) on both random coordination graphs and the real-world inspired problem of wind turbine control. 
+\end{itemize}
+
+\section{Related Work}\label{sec:relwork}
+
+\subsection{Bandits}
+A \emph{multi-armed bandit (MAB)} \cite{auer2010ucb} models the problem an agent with a fixed number of alternative actions, $a$, that must learn how to behave optimally. In the single-agent MAB literature the actions are referred to as \emph{arms}, but for consistency with the multi-agent literature, we use the term \emph{actions}. An MAB is a tuple $\left<\mathcal{A}, r\right>$: 
+\begin{itemize}
+\item $\mathcal{A}$ is the set of actions
+\item $r$ is the stochastic \emph{reward function} which assigns a reward, $r(a)$, for each action, $a$ at a timestep $t$. Each $r(a)$ is assumed to lay between $0$ and $1$.  
+\end{itemize}
+At each timestep, $t=1,2,...$, the agent chooses an action $a$, and receives a reward. For each time $a$ is performed, the received rewards, $r_t(a)$, are independent draws from the same distribution with mean $\mu(a)$. The goal of the agent is to minimise the cumulative \emph{regret} over time.
+When we denote the optimal joint action, ${\bf a}^*$, and the reward payoff, $\mu({a}^*)$, the regret of taking an action $a_t$ at timestep $t$ is: 
+\[
+	R_t = \mu({\bf a}^*) - r_t(a_t).
+\]
+A learning algorithm should minimise the cumulative expected regret over time: 
+\[
+    E[\sum_t R_t] =  E[\sum_t \mu({\bf a}^*) - r_t(a)].
+\]
+Several algorithms have proven bounds on their expected {regret}.
+
+\dmr{todo: mention the best UCB-like algorithm and its regret bounds, to prove that we can go lower. Hado, what's the current SOTA?}
+
+\subsection{Coordination Graphs}
+
+While multi-armed bandits capture the essence of a learning problem for a single agent, when there are multiple agents --- or just multiple decision variables --- it is often preferable to describe the underlying structure of the rewards for each joint action, in a \emph{coordination graph (CoG)}.  A CoG is a tuple $\left< \mathcal{D}, \mathcal{A}, \mathcal{R}\right>$: 
+\begin{itemize}
+\item $\mathcal{D} = \left\{ 1, ... , n\right\}$ is the set of $n$ agents; 
+\item $\mathcal{A} = \mathcal{A}_i \times ... \times \mathcal{A}_n$ is the joint action space (the Cartesian product of the finite action spaces of all agents) and 
+\item $\mathcal{R}$ is the set of $\rho$ \emph{local reward functions}, ${r}^e(\mathbf{a}^e)$,  with limited {scope} $e$, i.e., subset of agents that participate in it.
+\end{itemize}
+The total team payoff is the sum over local reward functions ${r}(\mathbf{a}) = \sum_{r^e \in \mathcal{R}} r^e(\mathbf{a}^e)$, where ${\bf a}^e$ contains the actions for the agents in $e$ that are contained in $\bf a$. For reasons of comparability between single- and multi-agent problems, we assume that $\forall {\bf a} : 0\leq {r}(\mathbf{a})\leq 1$. 
+
+At each timestep, $t=1,2,...$, the agents choose a joint action ${\bf a}$, leading to a reward $r_t^e({\bf a}^e)$, for each local reward function.  For each ${\bf a}^e$, the rewards received at each timestep $t$, where ${\bf a}^e$ is performed, $r^e_t({\bf a}^e)$,  are independent draws from the same distribution with mean ${\mu}^e(\mathbf{a}^e)$. Note that because of this property, given each $\bf a$, ${r}_t(\mathbf{a})$ are independent and identically distributed random variables. 
+
+When we denote the optimal joint action, ${\bf a}^*$, and its expected reward, $\mu({\bf a}^*)$, the regret of taking an action ${\bf a}_t$ is $R_t = \mu({\bf a}^*) - r_t({\bf a}_t)$. 
+
+If the agent would have direct access to the mean values $\mu^e({\bf a}^e)$, the optimal joint action, ${\bf a}^*$, and maximum reward, $\mu({\bf a}^*)$, could be found using \emph{variable elimination (VE)} \cite{rosenthal77nonserial,Guestrin02}. VE solves a coordination graph as a series of local subproblems. Each subproblem represents an agent, $i$, that is to be eliminated from the coordination graph. Specifically, at each iteration, the agent and all the local reward functions in which it participates are replaced by a new local reward function that incorporates agent $i$'s best response to each possible joint action of the agents with which it shares a local reward function:
+\[
+	\mu_{ne(i)}({\bf a}_{ne(i)}) = \max_{a_i} \sum_{e \ni i} \mu^e({\bf a}^e),
+\]
+where, $ne(i) = (\bigcup_{e\ni i} e) \setminus i$, are the neighbours of $i$. VE terminates when all agents are eliminated, producing $\mu({\bf a}^*)$.
+
+\subsection{Combinatorial UCB}
+This work is related to combinatorial bandits \citep{bubeck2012regret, cesa2012combinatorial, gai2012combinatorial, chen2013combinatorial}, in which from an action space of size $N$ at each time step a subset of actions $a_t \in 2^{[N]}$ is chosen, where $[N] = \{ 1, \ldots, N \}$ denotes the set of integers and $2^{[N]}$ is the powerset of $[N]$.  Our setting corresponds to a specific variant of this, with $N = \sum_{e = 1}^\rho \prod_{i \in \mathcal{D}^e} k^i$ and $|a_t| = \rho$ for all $t$.\footnote{\citet{chen2013combinatorial} use $m$ rather than $N$ and do not assume that always $|a_t| = \rho$.}
+
+In a very recent paper, \citet{chen2013combinatorial} consider the same \emph{semi-bandit} setting \citep{audibert2011minimax} that we consider, where we receive feedback on each local function and the global reward is a function of the local rewards.\footnote{Note that \citeauthor{chen2013combinatorial} also allow for non-linear combinations, where we only consider a linear sum. While reading their paper, you can assume that their function $f(x)$ is defined by $f(x) = \rho x$, such that $f^{-1}(x) = x/\rho$. Also note that they use $f^e(\mathbf{a}) \in [0,1]$ rather than $F(\mathbf{a}) \in [0,1]$, which scales up their regret by $\rho$. I've already corrected for this in the translated bound below.}. \citeauthor{chen2013combinatorial} construct an algorithm with expected regret, translated to our setting,\footnote{\hvh{I'll double check this translation later. I believe it to be correct, but I'm not 100\%.}} of at most
+\[
+\sum_{e=1}^\rho \sum_{\mathbf{a}^e \in \mathcal{A}^e} \left( \frac{ 12 \log T }{ \Delta_{\min}(\mathbf{a}^e) } - \frac{ 6 \log T }{ \Delta_{\max}(\mathbf{a}^e) } \right) +
+\] \[
+ N \left( \frac{ \pi^2}{ 3} + 1 \right)  \max_e \Delta_{\max}(\mathbf{a}^e) \,,
+\]
+where $\mathbf{a}^e \in \mathcal{A}^e \equiv \prod_{i \in \mathcal{D}^e} \mathcal{A}_i$ is a local action and
+\begin{align*}
+\Delta_{\min}(\mathbf{a}^e) & = \min_{\mathbf{a}\in\mathcal{A}} \{ \Delta(\mathbf{a}) \mid \Delta(\mathbf{a}) > 0, a^{e,i} = a^i \text{\tiny for all $a^{e,i} \in \mathbf{a}^e$} \} \\
+\Delta_{\max}(\mathbf{a}^e) & = \max_{\mathbf{a}\in\mathcal{A}} \{ \Delta(\mathbf{a}) \mid a^{e,i} = a^i \text{ for all $a^{e,i} \in \mathbf{a}^e$}\}\,.
+\end{align*}
+Although the constant integers are worse, this bound improves on our bound below in its dependence on $\Delta$, since
+\[
+\sum_{e=1}^\rho \sum_{\mathbf{a}^e \in \mathcal{A}^e} \Delta_{\min}(\mathbf{a}^e)^{-1} < \sum_{e=1}^\rho \sum_{\mathbf{a}^e \in \mathcal{A}^e} \Delta_{\min}(\mathbf{a}^e)^{-2} < 
+\]\[
+ \left( \sum_{e=1}^\rho \prod_{i \in \mathcal{D}^e} k^i \right) \Delta_{\min}(\mathbf{a})^{-2}\,,
+\]
+where
+\[
+\Delta_{\min}(\mathbf{a}) = \min_{\mathbf{a} \in \mathcal{A}} \{ \Delta(\mathbf{a}) \mid \Delta(\mathbf{a}) > 0 \} \,
+\]
+is used in our Theorem. Also, we have a dependence on $\log(T A)$, while \citeauthor{chen2013combinatorial} have a dependence on $\log T$. However, since $\log( T A ) = \log T + \log A$, this difference is merely a constant (and we do not have the trailing constant, due to a slightly different analysis), which is therefore not as important. On the other hand, our bound seems to improve on theirs by using $\sum_{e=1}^\rho (x^e)^2$ rather than $1$, which makes our bound a factor $\rho$ smaller if $x^e = \rho^{-1}$ for all $e$. \hvh{All of this still needs to be carefully double checked.}
+
+\section{Learning in Repeated Coordination Graphs}
+We now present our main contribution; a new algorithm called \emph{\algname (\algab\!)}. Like UCB, at each timestep \algab selects (joint) actions, ${\bf a}_t$, on the basis of the estimated average reward,  $\est_{t}({\bf a})$, and an exploration bonus $c_t(\mathbf{a})$. However, in UCB there are only atomic actions, and the exploration bonus is based on the counts each such an action has been performed before. In our setting however, we have a factored reward, based on local joint actions ${\bf a}^e$, where $e$ is a --- typically small --- subset of all agents. We also observe the received local rewards, $r^e_t({\bf a}^e)$, each time a local joint action ${\bf a}^e$ is performed. We can exploit this additional information to make the exploration bonus, $c_t(\mathbf{a})$, smaller than that of UCB, leading to tighter regret bounds. 
+
+
+\subsection{The \algname Algorithm}\label{sec:mainalg}
+In order to exploit the graphical structure, \algab keeps track of the estimated mean for each local reward function $\est_t^e({\bf a}^e)$. This estimate is updated each time it performs a joint action, $\bf a$. Furthermore, \algab keeps track of the number of times each time the local joint action ${\bf a}^e$ has been performed for each local reward function $r^e$: $n_t^e(\mathbf{a}^e)$.  This counter is updated each time it performs a joint action, $\bf a$. At each time step, \algab chooses a joint action ${\bf a}_t$ based on the estimated mean plus an exploration bonus dependent on the inverse weighted harmonic mean of the relevant counters, $n_t^e(\mathbf{a}^e)$, i.e., 
+\begin{equation}\label{eq:weightedhmean}
+{\tt iwhm}({\bf a}) = \sum_{e=1}^\rho n^e_t(\mathbf{a})^{-1} (x^e)^2,
+\end{equation}
+where, $x^e$ is the range of $r^e$, i.e., the maximal possible attainable value when drawing a sample from $r^e({\bf a}^e)$ across all ${\bf a}^e$, minus the minimal attainable value across all ${\bf a}^e$.  \dmr{problem, the iwhm concept is introduced but never used. It's purpose is to appeal to the existing concept of the harmonic mean, but our thingy is not quite it... todo: find a better mode to achieve this.}
+
+\begin{theorem}\label{th:main}
+If at each time $t$ we choose $\mathbf{a}_t$ such that
+\begin{equation}\label{eq:selectact}
+\mathbf{a}_t = \argmax_\mathbf{a} \est_t(\mathbf{a}) + c_t(\mathbf{a}) \,,
+\end{equation}
+where
+\begin{align*}
+\est_t(\mathbf{a})
+& = \left( \sum_{e=1}^\rho \est^e_t(\mathbf{a}) \right) \,, \\
+\est^e_t(\mathbf{a})
+& = \frac{1}{n^e_t(\mathbf{a})} \sum_{j=1}^t \ind{ L^e(\mathbf{a}) = L^e(\mathbf{a}_j) } f^e(\mathbf{a}_j) \,,\\
+\Delta(\mathbf{a})
+& = \mu(\mathbf{a}_*) - \mu(\mathbf{a}) = \max_{\mathbf{b}} \mathbb{E}[F(\mathbf{b})] - \mathbb{E}[F(\mathbf{a})]  \,,\\
+n^e_t(\mathbf{a})
+& = \sum_{j=1}^t \ind{ L^e(\mathbf{a}) = L^e(\mathbf{a}_j) } \,\text{, and} \\
+c_t(\mathbf{a})
+& = \sqrt{ \frac{1}{2} \left(\sum_{e=1}^\rho n^e_t(\mathbf{a})^{-1} (x^e)^2 \right) \log ( t A )} \,,
+\end{align*}
+then the expected global regret is bounded by
+\[
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le\frac{N \sum_{e=1}^\rho (x^e)^2 \log ( T A )}{2 \min_\mathbf{a} \Delta(\mathbf{a})^2} + \log T + 1 \,,
+\]
+where $N \equiv \sum_{e=1}^\rho \prod_{i \in \mathcal{D}^e} k^i$
+\end{theorem}
+\begin{proof}
+See appendix
+\end{proof}
+
+\begin{corollary}\label{cor1}
+If $k^i = k$ for all $i$, and if $|\mathcal{D}^e| = d$ for all $e$, then
+\[
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le\frac{\rho k^d \left( m k + \log T \right)}{2 \min_\mathbf{a} \Delta(\mathbf{a})^2} + \log T + 1\,.
+\]
+\end{corollary}
+\begin{proof}
+This is straightforward, considering $\sum_{e=1}^\rho x^e = 1$ implies $\sum_{e=1}^\rho (x^e)^2 < 1$ and using $\log( T A ) = \log T + \log A = \log T + \sum_{i=1}^m k^i$ and $N = \sum_{e=1}^\rho \prod_{i \in \mathcal{D}^e} k^i = \rho k^d$.
+\end{proof}
+The important thing to note is that the given regret bound is \emph{linear} in the number of agents $m$ and in the number of functions $\rho$, which implies---since $\rho \le {m \choose d} < m^d$---that it is \emph{polynomial} in $m$, with degree at most $d+1$. This is a huge improvement over the naive `flattened' regret bound, which is \emph{exponential} in the number of agents.
+\begin{corollary}
+If, in addition to the assumptions in Corollary \ref{cor1}, each local function has the same range such that $x^e = \rho^{-1}$, then
+\[
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le\frac{k^d \left( m k + \log T \right)}{2 \min_\mathbf{a} \Delta(\mathbf{a})^2} + \log T + 1\,.
+\]
+\end{corollary}
+\begin{proof}
+If $x^e = \rho^{-1}$ for each $e$, then $\sum_{e=1}^\rho (x^e)^2 = \rho^{-1}$ and therefore $N \sum_{e=1}^\rho (x^e)^2 = k^d$.
+\end{proof}
+Note that this implies that under the assumption that each local function has the same range, 1) the regret no longer depends on $\rho$ and 2) the regret is \emph{linear} in the number of agents.
+
+\subsection{Selecting the Optimal Joint Action}\label{sec:selectalg}
+In order to be able to compute the maximising action in Equation \ref{eq:selectact}, we need to compute the inverse weighted harmonic mean of the counts per local reward function (Equation \ref{eq:weightedhmean}). We want to be able to compute the maximising action (Equation \ref{eq:selectact}) via a scheme similar to VE. However, the $\est_t(\mathbf{a}) + c_t(\mathbf{a})$ in Equation \ref{eq:selectact} is not computable directly as a sum over local components with scopes $e$. Therefore, we need to do a trick. We observe that we can express the estimated mean as the sum of local estimated means, and that $c_t(\mathbf{a})$ is be expressed as some function over the inverse weighted counts: $y(\sum_{e=1}^\rho n^e_t(\mathbf{a}^e)^{-1} (x^e)^2)$. Hence, we if would write down the local estimates as vectors with one an estimated mean component and one inverse weighted counts component, 
+\begin{equation}\label{eq:vectordef}
+ {\bf v}^e({\bf a}^e) =   (\est^e_t(\mathbf{a}^e), n^e_t(\mathbf{a})^{-1} (x^e)^2), 
+\end{equation}
+we can express the mean plus exploration bonus as a function applied to the sum of these vectors:
+\begin{equation}\label{eq:vectorsum}
+ {\bf v}({\bf a}) = \sum^e  {\bf v}^e({\bf a}^e), 
+ \end{equation}
+\begin{equation}\label{eq:zfunction}
+\est_t(\mathbf{a}) + c_t(\mathbf{a}) = z( {\bf v}({\bf a})) = {\bf v}[1] + \sqrt{ \frac{1}{2}  {\bf v}[2] \log ( t A )} .
+\end{equation}
+\dmr{Explain the why of the magicking around with the function y and z better.}
+
+Using the vector formulation of Equation \ref{eq:vectordef} we build off an extension to VE, called \emph{multi-objective variable elimination (MOVE)} \cite{Rollon06MOBE,roijers2015computing,roijersPhD}, that is able to handle vectors. Instead of single best response values for eliminated agents, MOVE produces sets of vectors that are possibly optimal as intermediate results. At each agent elimination, MOVE computes all possible (local) value vectors for the subproblem of eliminating agent $i$, and \emph{prunes} away those vectors that cannot be optimal.  
+
+In MOVE, it is typically assumed that the final result is a set of possibly optimal vectors with respect to some unknown utility function, $z$. Contrary to this assumption however, we know the exact formulation of $z$, i.e., Equation \ref{eq:zfunction}. Hence we can do much more efficient pruning. We adapt MOVE for selecting the optimal joint action according to Equation \ref{eq:selectact}. We call this algorithm \emph{upper confidence variable elimination (UCVE)}. Before we can define this algorithm however, we first have to define the input to this algorithm. \dmr{question: do you think this is clear for readers that might not be familiar with MO?} 
+
+To be able to work with \emph{sets} of vectors as intermediate results, we first reformulate the problem of finding the optimal joint action in these terms. Specifically, we define the input to our algorithm as a set of \emph{local upper confidence vector set functions (UCVSFs)}, $\mathcal{F}$. The UCVSFs in $\mathcal{F}$, $f^e({\bf a}^e)$, produce a set of vectors of the form in Equation \ref{eq:vectordef}. 
+We define the input to UCVE, $\mathcal{F}$, as a set that contains a local upper confidence vector set function for each $r^e$ in $\mathcal{R}$ that is identically scoped, and all such functions produce a singleton set 
+\[f^e({\bf a}^e) = \{ {\bf v}^e({\bf a}^e) \}.\]
+Eliminating an agent $i$, will be done by replacing the $f^e({\bf a}^e)$ which have $i$ in scope, i.e., $i \in e$, by a new function that incorporates the possibly optimal responses of $i$. These possibly optimal responses will be vectors of the form of Equation \ref{eq:vectordef}.  
+
+\begin{algorithm}[h]
+\textit{Input :} A set of local upper confidence vector set functions $\mathcal{F}$ and an elimination order $\tt q$ (a queue with all agents)\newline
+ \textit {Output :} An optimal joint action, $\bf a^*$\\\
+ \vspace{-2mm}
+\hrule
+\vspace{2mm}
+\begin{algorithmic}[1]
+\WHILE{$\tt q$ is not empty \label{ln:main}}
+	\STATE $i \leftarrow {\tt q.dequeue}() $
+	%\STATE $ \mathcal{F} \leftarrow \mathtt{eliminate}(\mathcal{F}, i)$
+	\STATE $ne(i) \leftarrow$ the set of neighboring agents of $i$
+	\STATE $\mathcal{F}_i \leftarrow$ the subset of UCVFs in $\mathcal{F}$ that have $i$ in scope
+	\STATE $f^{new}(\mathbf{a}_{ne(i)})$ $\leftarrow$ a new UCVF\label{ln:fny}
+	\STATE $\displaystyle x_u \leftarrow \sum_{f^e \in \mathcal{F} \setminus\mathcal{F}_i} \left(\max_{{\bf a}^e \in \mathcal{A}^e} \max_{{\bf v}\in f^e({\bf a}^e)} {\bf v}[2] \right)$ 
+	\STATE $\displaystyle x_l \leftarrow \sum_{f^e \in \mathcal{F} \setminus\mathcal{F}_i} \left(\min_{{\bf a}^e \in \mathcal{A}^e} \min_{{\bf v}\in f^e({\bf a}^e)} {\bf v}[2] \right)$ 
+	\FORALL{$~~~~\mathbf{a}_{ne(i)} \in \mathcal{A}_{ne(i)}~~~~$}
+%\STATE bla
+%\begin{comment}
+		\STATE $\displaystyle\mathcal{V} \leftarrow \bigcup_{a_i\in\mathcal{A}_i} \bigoplus_{f^e\in \mathcal{F}_i} f^e({\bf a}^e)$
+		\STATE $\!f^{new}({\bf a}_{ne(i)})\!\!\leftarrow\!\!{\tt prune}(\mathcal{V},  x_u, x_l)$ \label{ln:themagic}
+%\end{comment}
+	\ENDFOR
+	\STATE $ \mathcal{F} \leftarrow \mathcal{F} \setminus \mathcal{F}_i \cup \{ f^{new} \} $
+\ENDWHILE \label{ln:elim}
+\STATE $ f \leftarrow$ retrieve final factor from $\mathcal{F} $ \label{ln:retr}
+\STATE $\mathcal{S} \leftarrow f(a_\emptyset)$ \label{ln:getset}
+\STATE {\bf return} {the joint action for a random element of $\mathcal{S}$}
+\end{algorithmic}
+\caption{$\mathtt{UCVE}(\mathcal{\mathcal{F}})$}
+\label{alg:UCVE}
+\end{algorithm}
+
+UCVE is provided in Algorithm \ref{alg:UCVE}. Note that we only describe what is traditionally known as the \emph{forward} pass of the variable elimination scheme. This is because to retrieve the optimal joint action, we make use of the tagging scheme of MOVE \cite{roijers13computing,roijers2015computing}, in which vectors are tagged with the appropriate action of an agent when this agent is eliminated. For details on the tagging scheme please refer to \cite{roijers13computing}.  
+
+UCVE eliminates all agents in a predetermined order, $\tt q$, in the main loop (line 1--13). On line 2 the next agent, $i$, is popped of the queue, on line 3 the neighbouring agents of $i$ are determined (i.e., those agents with which $i$ shares a local reward function, $ne(i) = (\bigcup_{e\ni i} e) \setminus i$), and on line 4 the factors that have $i$ in scope, $\mathcal{F}_i$ are collected. The functions in $\mathcal{F}_i$ will be replaced in $\mathcal{F}$ (line 12), by a new UCVSF, $f^{new}$ (line 5). This new UCVSF has all the neighbouring agents of agent $i$, $ne(i)$ in scope. 
+
+First, all possible vectors, $\mathcal{V}$, that can be made with the UCVSFs in $\mathcal{F}_i$ are computed (on line 9), across all actions of $i$, for a given ${\bf a}_{ne(i)}$: 
+\[\bigcup_{a_i\in\mathcal{A}_i} \bigoplus_{f^e\in \mathcal{F}_i} f^e({\bf a}^e),
+\]
+where $\mathcal{A}_i$ is the action space of agent $i$, and the cross-sum operator $A \oplus B$ is defined as $A \oplus B = \{ {\bf a} + {\bf b} : {\bf a}\in A \wedge {\bf b} \in B\}$.  Note that ${\bf a}^e$ always includes the appropriate action $a_i$ (which is under the union) and the appropriate actions from ${\bf a}_{ne(i)}$.  After $\mathcal{V}$ is computer, the vectors in $\mathcal{V}$ that cannot lead to an optimal joint action are pruned on line 10. Each vector in $\mathcal{V}$ consists of an estimated mean and a weighted inverse counts part that will lead to the exploration bonus. Because the weighted inverse counts  cannot be linearly added to the estimated mean, we cannot a priori tell whether a vector ${\bf v} \in \mathcal{V}$ is better than  another vector ${\bf v}' \in \mathcal{V}$ when ${\bf v}[1]>{\bf v}'[1] \wedge {\bf v}[2]<{\bf v}'[2]$. 
+However, we can compute an upper and a lower bound on the exploration bonus, using the maximum/minimum values for the exploration part of the remaining functions in $\mathcal{F} \setminus \mathcal{F}_i$, computed on lines 6 and 7. Specifically, a vector ${\bf v} \in \mathcal{V}$ cannot contribute to the optimal value if there is another vector ${\bf v}' \in \mathcal{V}$ such that
+\[
+	{\bf v}[1]\!+\!\sqrt{\!\frac{1}{2}  (\!{\bf v}[2]\!+\!x_u) \log ( t A )}\!\! <\!\! {\bf v}'[1]\!+\! \sqrt{\!\frac{1}{2}  (\!{\bf v}'[2]\!+\!x_l) \log ( t A )}.
+	\]
+Hence, $\tt prune$ removes those candidate local upper confidence vectors that cannot contribute to finding the maximal mean plus exploration bonus according to the this condition:
+\[
+{\tt prune}(\mathcal{V}, x_u, x_l) =  \{ {\bf v} : {\bf v} \in \mathcal{V} \wedge \neg\exists ({\bf v}' \in \mathcal{V}) \]
+\[
+{\bf v}[1]\!+\!\sqrt{\!\frac{1}{2}  (\!{\bf v}[2]\!+\!x_u) \log ( t A )}\!\! <
+\]
+\[
+{\bf v}'[1]\!+\! \sqrt{\!\frac{1}{2}  (\!{\bf v}'[2]\!+\!x_l) \log ( t A )} \}.
+\]
+
+After all agents have been eliminated, there is only one factor left, that does not condition on any actions of any actions (because the last agent to be eliminated cannot have any neighbours), which we denote by conditioning on a dummy action $a_\emptyset$. We retrieve all possibly optimal vectors from this function on line 15. Note that all these vectors must have the same mean estimate plus exploration value, as for the last agent elimination $\mathcal{F} \setminus \mathcal{F}_i = \emptyset$ and thus $x_u = x_l = 0$. Therefore, we can retrieve a random vector from the remaining alternatives, and return its associated joint action. This action, ${\bf a}_t$, maximises the $\est_t(\mathbf{a}) + c_t(\mathbf{a})$ of Equation \ref{eq:selectact}.\footnote{The joint action is stored together with the vector, because of the tagging scheme of \cite{roijers13computing,roijers2015computing}.}
+
+\section{Experiments}\label{sec:exp}
+
+\section{Conclusion}
+
+\bibliography{dmrThesis}
+\bibliographystyle{icml2016}
+
+\appendix
+
+\section{Proof Theorem \ref{th:main}}
+\dmr{todo: a lot of LaTeX magic in order to make this look okay.}
+
+The proof is divided into two parts. First, we bounds the probability that an action is selected while its actual regret is `high'. Then, we bound the number of times an action is selected whose actual regret is `low'. The latter is possible because we define the threshold between `high' and `low' regret to be equal to $\Delta(\mathbf{a}_t) = 2 c_t(\mathbf{a}_t)$, such that this threshold on the number of times each action is selected.
+
+Let $C_t(\mathbf{a})$ denote the event that $\Delta(\mathbf{a}) > 2 c_t(\mathbf{a})$ holds and let $\bar{C}_t(\mathbf{a})$ be the event that $\Delta(\mathbf{a}) \le 2 c_t(\mathbf{a})$ holds. By the law of the excluded middle, we can then write
+\begin{equation}\label{decomp}
+\mathbb{E}\left[ \Delta(\mathbf{a}_t) \right]
+=
+P( C_t(\mathbf{a}_t) ) \mathbb{E}\left[ \Delta(\mathbf{a}_t) \md C_t(\mathbf{a}_t) \right] 
++ P( \bar{C}_t(\mathbf{a}_t) ) \mathbb{E}\left[ \Delta(\mathbf{a}_t) \md \bar{C}_t(\mathbf{a}_t) \right]
+\end{equation}
+We first look at all time steps on which $C_t(\mathbf{a}_t)$ holds, such that
+\begin{equation}\label{Dge2c}
+\Delta(\mathbf{a}_t) > 2 c_t(\mathbf{a}_t)\,.
+\end{equation}
+Specifically, we bound the probability that this event occurs. First, using the law of total probability and Bayes' Theorem, we can derive
+\begin{align}
+\prob{ C_t(\mathbf{a}_t) }
+& = \sum_{a \in \mathcal{A}} \prob{ C_t(\mathbf{a}) \md \mathbf{a} = \mathbf{a}_t } \prob{ \mathbf{a} = \mathbf{a}_t } \nonumber \\
+& = \sum_{a \in \mathcal{A}} \prob{ \mathbf{a} = \mathbf{a}_t \md C_t(\mathbf{a}) } \prob{ C_t(\mathbf{a}) } \nonumber \\
+& \le  \sum_{a \in \mathcal{A}} \prob{ \mathbf{a} = \mathbf{a}_t \md C_t(\mathbf{a}) } \label{sumPC} \,.
+\end{align}
+Let $f^e_{(n)}(\mathbf{a})$ denote the (random) value of the $e^\text{th}$ local reward when the corresponding local action was selected the $n^\text{th}$ time. Then,
+\begin{align*}
+\prob{ \mathbf{a} = \mathbf{a}_t \mid C_t(\mathbf{a}) }
+& = \prob{ \est_t(\mathbf{a}) + c_t(\mathbf{a}) = \max_b \est_t(b) + c_t(b) \md C_t(\mathbf{a}) } \\
+& \le \prob{ \est_t(\mathbf{a}) + c_t(\mathbf{a}) \ge \est_t(\mathbf{a}_*) + c_t(\mathbf{a}_*) \md C_t(\mathbf{a}) } \\
+& = \prob{ \sum_{e=1}^\rho \sum_{n=1}^{n^e_t(\mathbf{a})} \frac{f^e_{(n)}(\mathbf{a})}{n^e_t(\mathbf{a})} - \sum_{n=1}^{n^e_t(\mathbf{a}_*)} \frac{f^e_{(n)}(\mathbf{a}_*)}{n^e_t(\mathbf{a}_*)} \ge c_t(\mathbf{a}_*) - c_t(\mathbf{a}) \md C_t(\mathbf{a}) } \,.
+\end{align*}
+Recall that $f^e(\mathbf{a}) \in [0,x^e]$, for some $x^e \in \mathbb{R}^+$. The sum on the left hand side consists of $\rho$ sums of random variables. The $e^\text{th}$ sum contains $n^e_t(\mathbf{a})$ variables with with range $[ 0, x^e/n^e_t(\mathbf{a})  ]$ and $n^e_t(\mathbf{a}_*)$ variables with range $[-x^e/n^e_t(\mathbf{a}_*),0]$. The probability of the total sum exceeding $c_t(\mathbf{a}_*) - c_t(\mathbf{a})$ can therefore be bounded with Hoeffding's inequality as
+\begin{align*}
+\prob{ \mathbf{a} = \mathbf{a}_t \md C_t(\mathbf{a}) }
+& \le \text{exp}\left( -\frac{ 2 ( \mu(\mathbf{a}_*) - \mu(\mathbf{a}) + c_t(\mathbf{a}_*) - c_t(\mathbf{a}) )^2 }{ \sum_{e=1}^\rho \left( \sum_{n=1}^{n^e_t(\mathbf{a})} \left( \frac{x^e}{n^e_t(\mathbf{a})} \right)^2 + \sum_{n=1}^{n^e_t(\mathbf{a}_*)} \left( \frac{x^e}{n^e_t(\mathbf{a}_*)} \right)^2 \right) } \right) \\
+& = \text{exp}\left( -\frac{ 2 ( \Delta(\mathbf{a}) + c_t(\mathbf{a}_*) - c_t(\mathbf{a}) )^2 }{ \sum_{e=1}^\rho (x^e)^2 \left( n^e_t(\mathbf{a})^{-1} + n^e_t(\mathbf{a}_*)^{-1} \right) } \right) \,.
+\end{align*}
+We apply the condition $C_t(\mathbf{a})$ that $\Delta(\mathbf{a}) > 2 c_t(\mathbf{a})$ and derive
+\begin{align*}
+\prob{ \mathbf{a} = \mathbf{a}_t \md C_t(\mathbf{a}) }
+& \le \text{exp}\left( -\frac{ 2 ( c_t(\mathbf{a}) + c_t(\mathbf{a}_*) )^2 }{ \sum_{e=1}^\rho (x^e)^2 \left( n^e_t(\mathbf{a})^{-1} + n^e_t(\mathbf{a}_*)^{-1} \right) } \right) \\
+& \le \text{exp}\left( -\frac{ 2 c_t(\mathbf{a})^2 + 2 c_t(\mathbf{a}_*)^2 }{ \sum_{e=1}^\rho (x^e)^2 \left( n^e_t(\mathbf{a})^{-1} + n^e_t(\mathbf{a}_*)^{-1} \right) } \right) \\
+& = \text{exp}\left( -\log( t A ) \right) \\
+& = \frac{1}{t A} \,.
+\end{align*}
+Using \eqref{sumPC}, we can conclude
+\begin{align}
+\sum_{t=1}^T P( C_t(\mathbf{a}_t) ) \mathbb{E}\left[ \Delta(\mathbf{a}_t) \md C_t(\mathbf{a}_t) \right] 
+& \le 
+\sum_{t=1}^T P( C_t(\mathbf{a}_t) ) \nonumber\\
+& \le
+\sum_{t=1}^T \frac{1}{t} \nonumber\\
+& \le
+\log T + 1 \,, \label{C}
+\end{align}
+where for the last step we used $\sum_t^T t^{-1} < \log T + \gamma + \frac{3}{6T+2} < \log T + 1$ \citep{chen2003best}, where $\gamma = 0.5772\ldots$ is Euler's constant.
+
+Now, we look at the time steps on which \eqref{Dge2c} does not hold, such that
+\[
+\Delta(\mathbf{a}_t) \le 2 c_t( \mathbf{a}_t ) \,.
+\]
+With some algebra we can rewrite this condition to
+\[
+\frac{\sum_{e=1}^\rho (x^e)^2 }{\sum_{e=1}^\rho (x^e)^2 n^e_t(\mathbf{a})^{-1}} \le \frac{1}{2} \frac{\sum_{e=1}^\rho (x^e)^2 \log ( t A )}{\Delta(\mathbf{a}_t)^2} \,.
+\]
+The left hand side of this equation is a weighted harmonic mean of the counters $n^e_t(\mathbf{a}_t)$, with weights $(x^e)^2$. By definition, any harmonic mean exceeds the minimum of the elements that are averaged, such that the former implies
+\[
+\min_e n^e_t(\mathbf{a}_t)
+\le \frac{\sum_{e=1}^\rho (x^e)^2 \log ( t A )}{2 \Delta(\mathbf{a}_t)^2}
+\le \frac{\sum_{e=1}^\rho (x^e)^2 \log ( T A )}{2 \min_\mathbf{a} \Delta(\mathbf{a})^2}\,.
+\]
+Note that there are precisely $N = \sum_{e=1}^\rho \prod_{i \in \mathcal{D}^e} k^i$ different counters. Furthermore, note that the right-hand side of the last inequality does not depend on $t$. Therefore, this inequality can be true on at most $\frac{N \sum_{e=1}^\rho (x^e)^2 \log ( T A )}{2 \min_\mathbf{a} \Delta(\mathbf{a})^2}$ different time steps. This implies that
+\[
+\sum_{t=1}^T \prob{ \bar{C}_t(\mathbf{a}_t) }
+=
+\mathbb{E}\left[ \sum_{t=1}^T \ind{ \bar{C}_t(\mathbf{a}_t) } \right]
+\le 
+\frac{N \sum_{e=1}^\rho (x^e)^2 \log ( T A )}{2 \min_\mathbf{a} \Delta(\mathbf{a})^2} \,.
+\]
+Together with \eqref{decomp} and \eqref{C}, this implies
+\[
+\mathbb{E} \left[ \sum_{t=1}^T \Delta(\mathbf{a}_t) \right] \le\frac{N \sum_{e=1}^\rho (x^e)^2 \log ( T A )}{2 \min_\mathbf{a} \Delta(\mathbf{a})^2} + \log T + 1\,.
+\]
+
+
+\end{document} 
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was
+% created by Lise Getoor and Tobias Scheffer, it was slightly modified  
+% from the 2010 version by Thorsten Joachims & Johannes Fuernkranz, 
+% slightly modified from the 2009 version by Kiri Wagstaff and 
+% Sam Roweis's 2008 version, which is slightly modified from 
+% Prasad Tadepalli's 2007 version which is a lightly 
+% changed version of the previous year's version by Andrew Moore, 
+% which was in turn edited from those of Kristian Kersting and 
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.  
